@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco Imobiliário Online</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <header>
+            <h1>Banco Imobiliário</h1>
+        </header>
+
+        <main style="display: flex; gap: 40px; align-items: flex-start;">
+            <div id="board" class="board">
+                <!-- O tabuleiro será renderizado dinamicamente via JS -->
+                <div class="board-center">
+                    <button id="roll-button" class="action-button">ROLAR DADOS</button>
+                    <div id="dice-area"></div>
+                    <div id="card-display"></div>
+                    <div id="game-log"></div>
+                </div>
+            </div>
+
+            <aside id="player-panels">
+                <!-- Painéis dos jogadores preenchidos via JS -->
+            </aside>
+        </main>
+
+        <section id="ui-layer">
+            <!-- Modais e notificações -->
+        </section>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

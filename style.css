@@ -1,0 +1,526 @@
+:root {
+    --bg-color: #2c3e50;
+    --text-color: #ecf0f1;
+    --board-bg: #f5f6fa;
+    --cell-border: #333;
+    --board-width: 740px; /* 80*2 + 60*9 + borders? adjust if needed */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.board {
+    display: grid;
+    /* 11 colunas: 80px nas pontas, 60px no meio */
+    grid-template-columns: 80px repeat(9, 60px) 80px;
+    /* 11 linhas: 80px nas pontas, 60px no meio */
+    grid-template-rows: 80px repeat(9, 60px) 80px;
+    background-color: var(--board-bg);
+    border: 4px solid var(--cell-border);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.board-center {
+    grid-column: 2 / 11;
+    grid-row: 2 / 11;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #dcdde1;
+    border: 2px solid var(--cell-border);
+}
+
+/* Células base */
+.cell {
+    border: 1px solid var(--cell-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    font-size: 10px;
+    text-align: center;
+    color: #333;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Posicionamento automático via script será feito depois, 
+   aqui definimos apenas estilos específicos */
+
+.cell-property {
+    background-color: #fff;
+}
+
+.cell-color-bar {
+    width: 100%;
+    height: 15px;
+    border-bottom: 1px solid var(--cell-border);
+    position: absolute;
+    top: 0;
+}
+
+.cell-name {
+    margin-top: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 9px;
+}
+
+.cell-price {
+    font-weight: bold;
+    font-size: 10px;
+}
+
+/* Casas e Hotéis */
+.houses-container {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    z-index: 5;
+}
+
+.house {
+    width: 8px;
+    height: 8px;
+    background-color: #27ae60;
+    border: 1px solid #1e8449;
+    border-radius: 1px;
+}
+
+.hotel {
+    width: 12px;
+    height: 12px;
+    background-color: #e74c3c;
+    border: 1px solid #c0392b;
+    border-radius: 1px;
+}
+
+/* Propriedade Hipotecada */
+.cell.mortgaged {
+    filter: grayscale(0.8);
+    opacity: 0.8;
+}
+
+.mortgage-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background: rgba(192, 57, 43, 0.9);
+    color: white;
+    font-weight: bold;
+    padding: 2px 5px;
+    font-size: 8px;
+    border: 1px solid white;
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+}
+
+/* Cantos */
+.cell-start, .cell-jail, .cell-parking, .cell-go-jail {
+    background-color: #fff;
+    font-weight: bold;
+}
+
+/* Peças dos Jogadores */
+.pieces-container {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    pointer-events: none; /* Deixa cliques passarem para a célula */
+    z-index: 10;
+}
+
+.player-piece {
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+    transition: transform 0.3s ease-out;
+}
+
+.player-piece svg {
+    display: block;
+}
+
+#player-panels {
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.player-panel {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.player-panel.active {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    outline: 3px solid #f1c40f;
+}
+
+.player-panel.bankrupt {
+    opacity: 0.6;
+    filter: grayscale(1);
+}
+
+.player-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.player-money {
+    color: #27ae60;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.status-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.status-tag.jail { background: #e67e22; color: white; }
+.status-tag.bankrupt { background: #c0392b; color: white; }
+
+/* Botão de Ação Central */
+.action-button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.1s, background-color 0.2s;
+    margin-bottom: 20px;
+}
+
+.action-button:hover {
+    background-color: #2ecc71;
+    transform: translateY(-2px);
+}
+
+.action-button:active {
+    transform: translateY(1px);
+}
+
+.action-button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Dados Visuais */
+#dice-area {
+    margin: 15px 0;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dice-wrapper {
+    display: flex;
+    gap: 15px;
+}
+
+.dice-wrapper.rolling {
+    animation: shake 0.1s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    50% { transform: translate(-1px, -1px) rotate(2deg); }
+    100% { transform: translate(1px, 1px) rotate(0deg); }
+}
+
+.die {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid #333;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 6px;
+    gap: 4px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.dot.visible {
+    background: #222;
+}
+
+/* Modais */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 400px;
+    text-align: center;
+    color: #333;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: modal-pop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes modal-pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    color: var(--bg-color);
+}
+
+.modal-content p {
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.modal-btn {
+    padding: 10px 30px;
+    font-size: 1em;
+    margin-bottom: 0;
+}
+
+.modal-btn.secondary {
+    background-color: #7f8c8d;
+}
+
+.modal-btn.secondary:hover {
+    background-color: #95a5a6;
+}
+
+/* Deed Modal (Título de Posse) */
+.deed-modal {
+    padding: 0;
+    overflow: hidden;
+    max-width: 320px;
+}
+
+.deed-card {
+    border: 2px solid #333;
+    margin: 15px;
+    background: white;
+    text-align: center;
+}
+
+.deed-header {
+    padding: 10px;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    border-bottom: 2px solid #333;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.deed-name {
+    font-size: 1.4em;
+    margin-top: 5px;
+    background: white;
+    color: #333;
+    padding: 5px;
+    border: 1px solid #333;
+    text-shadow: none;
+}
+
+.deed-body {
+    padding: 15px;
+    font-size: 13px;
+    color: #333;
+    text-align: left;
+}
+
+.rent-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.rent-row.hotel {
+    font-weight: bold;
+    color: #c0392b;
+}
+
+.deed-footer {
+    font-size: 11px;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+.deed-info {
+    padding: 15px;
+    background: #f5f6fa;
+    border-top: 1px solid #ddd;
+}
+
+.cell {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cell:hover {
+    background-color: #f1f2f6;
+}
+
+/* Cartas Sorte ou Revés */
+.card-modal {
+    padding: 0;
+    max-width: 320px;
+}
+
+.luck-card {
+    margin: 15px;
+    height: 200px;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 3px solid white;
+    outline: 2px solid #333;
+}
+
+.luck-card.luck {
+    background: linear-gradient(135deg, #f1c40f, #e67e22);
+    color: white;
+}
+
+.luck-card.bad-luck {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.card-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.card-body p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.card-value {
+    font-size: 1.4em;
+    font-weight: bold;
+    background: rgba(255,255,255,0.2);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.card-footer {
+    font-size: 9px;
+    letter-spacing: 2px;
+    opacity: 0.8;
+}
+
+#game-log {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 12px;
+    background: rgba(0,0,0,0.05);
+    padding: 10px;
+    border-radius: 5px;
+    color: #2c3e50;
+    border: 1px inset rgba(0,0,0,0.1);
+}
+
+.log-entry {
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 2px;
+}
+
