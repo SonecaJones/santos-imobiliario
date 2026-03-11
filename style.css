@@ -555,6 +555,61 @@ body {
 }
 
 
+/* Setup Modal */
+.setup-modal {
+    max-width: 600px;
+    width: 90%;
+}
+
+#player-setup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.player-setup-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f1f2f6;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.player-setup-item input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.player-setup-item select, .player-setup-item input[type="color"] {
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.remove-player-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.setup-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
 #game-log {
     width: 100%;
     max-height: 200px;

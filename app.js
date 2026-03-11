@@ -9,6 +9,7 @@ import { renderPlayerPanels } from './ui/player-panel.js';
 import { DiceUI } from './ui/dice-render.js';
 import { NotificationUI } from './ui/notifications.js';
 import { sfx } from './ui/audio-engine.js';
+import { SetupUI } from './ui/setup-ui.js';
 import { Player } from './core/player.js';
 import { GameController } from './core/game.js';
 
@@ -17,6 +18,20 @@ let game;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Inicializando Santos Imobiliário...');
     
+    // 1. Inicializa a interface de Setup
+    // O jogo só começa de fato quando o callback do SetupUI for disparado
+    new SetupUI((selectedPlayers) => {
+        startGame(selectedPlayers);
+    });
+});
+
+/**
+ * Inicia a partida com os jogadores configurados no Setup
+ */
+function startGame(playerConfigs) {
+    const logContainer = document.getElementById('game-log');
+    const rollButton = document.getElementById('roll-button');
+
     // 1. Define o que acontece ao clicar em uma casa
     const handleCellClick = (space) => {
         if (space.type === 'property' || space.type === 'station') {
@@ -59,22 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
         updateVisualLog(game.log, logContainer);
     };
 
-    // 2. Renderiza o tabuleiro passando o callback de clique
+    // 2. Renderiza o tabuleiro inicial
     renderBoard(handleCellClick);
 
-    // 3. Cria os jogadores
-    const p1 = new Player('p1', 'Caiçara 1', '#e74c3c', 'human');
-    p1.piece = 'car';
-    
-    const p2 = new Player('p2', 'Bot Santista', '#3498db', 'bot');
-    p2.piece = 'ship';
+    // 3. Cria as instâncias de Player baseadas na configuração
+    const players = playerConfigs.map((config, index) => {
+        const p = new Player(`p${index}`, config.name, config.color, config.type);
+        p.piece = config.piece;
+        return p;
+    });
 
     // 4. Inicializa o controlador do jogo
-    game = new GameController([p1, p2]);
+    game = new GameController(players);
+    window.game = game; // Expor para debug se necessário
 
-    // 4. Configura animação de dados, movimento, cartas e dinheiro
+    // 5. Configura animações e callbacks do motor
     game.onDiceRoll = async (d1, d2) => {
-        // Toca som de dados repetidamente durante a animação
         const rollSfxInterval = setInterval(() => sfx.playDice(), 100);
         await DiceUI.animateRoll(d1, d2);
         clearInterval(rollSfxInterval);
@@ -84,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sfx.playStep();
         renderPlayers(game.players);
         renderPlayerPanels(game.players, game.currentPlayerIndex);
-        await new Promise(resolve => setTimeout(resolve, 250)); // Delay da caminhada
+        await new Promise(resolve => setTimeout(resolve, 250));
     };
 
     game.onLuckCard = async (card) => {
@@ -95,37 +110,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     game.onMoneyChange = (player, amount) => {
         if (amount > 0) sfx.playCoin();
-        else if (amount < 0) sfx.playStep(); // Um som neutro para perda pequena ou o de erro para falência
         spawnMoneyAnimation(player, amount);
     };
 
-    // 5. Renderiza estado inicial
+    // 6. Renderiza estado inicial
     renderPlayers(game.players);
     renderPlayerPanels(game.players, game.currentPlayerIndex);
-    DiceUI.render(1, 1); // Mostra dados iniciais (1,1)
+    DiceUI.render(1, 1);
 
-    // 7. Configura botão de ação
-    const rollButton = document.getElementById('roll-button');
-    const logContainer = document.getElementById('game-log');
-
-    rollButton.addEventListener('click', async () => {
+    // 7. Configura botão de ação principal
+    rollButton.onclick = async () => {
         rollButton.disabled = true;
-        
-        // Executa o turno
         await game.takeTurn();
-        
-        // Atualiza UI
-        renderPlayers(game.players);
-        renderPlayerPanels(game.players, game.currentPlayerIndex);
-        updateVisualLog(game.log, logContainer);
-
+        refreshUI();
         rollButton.disabled = false;
         rollButton.textContent = `TURNO DE: ${game.currentPlayer.name}`;
-    });
+    };
 
     rollButton.textContent = `TURNO DE: ${game.currentPlayer.name}`;
-});
+    console.log('Partida iniciada!');
+}
 
+/**
+ * Helpers Visuais
+ */
 function spawnMoneyAnimation(player, amount) {
     const pieceEl = document.getElementById(`piece-${player.id}`);
     if (!pieceEl) return;
@@ -141,12 +149,11 @@ function spawnMoneyAnimation(player, amount) {
     el.innerText = `${amount > 0 ? '+' : ''}${amount} M$`;
 
     document.body.appendChild(el);
-
-    // Remove do DOM após a animação
     setTimeout(() => el.remove(), 1500);
 }
 
 function updateVisualLog(logs, container) {
+    if (!container) return;
     container.innerHTML = logs.slice(-10).reverse().map(msg => 
         `<div class="log-entry">${msg}</div>`
     ).join('');

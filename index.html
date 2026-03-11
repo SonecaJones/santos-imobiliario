@@ -8,8 +8,25 @@
 </head>
 <body>
     <div id="game-container">
+        <!-- Overlay de Setup Inicial -->
+        <div id="setup-overlay" class="modal-overlay">
+            <div class="modal-content setup-modal">
+                <h2>Santos Imobiliário</h2>
+                <p>Configure sua partida caiçara</p>
+
+                <div id="player-setup-list">
+                    <!-- Lista de jogadores para configurar -->
+                </div>
+
+                <div class="setup-actions">
+                    <button id="add-player-btn" class="action-button modal-btn secondary">➕ ADICIONAR JOGADOR</button>
+                    <button id="start-game-btn" class="action-button modal-btn">INICIAR JOGO</button>
+                </div>
+            </div>
+        </div>
+
         <header>
-            <h1>Santos Imobiliário</h1>
+            <h1>Banco Imobiliário</h1>
         </header>
 
         <main style="display: flex; gap: 40px; align-items: flex-start;">
