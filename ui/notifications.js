@@ -39,19 +39,20 @@ export class NotificationUI {
     }
 
     /**
-     * Exibe uma carta de Sorte ou Revés.
+     * Exibe uma carta de Sorte ou Revés com animações especiais.
      * @param {object} card 
      */
     static async showLuckCard(card) {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
-            overlay.className = 'modal-overlay';
+            overlay.className = 'modal-overlay card-modal';
             
-            const isLuck = card.value >= 0 && card.type !== 'move';
-
+            const isLuck = card.isPositive;
+            
             overlay.innerHTML = `
-                <div class="modal-content card-modal">
-                    <div class="luck-card ${isLuck ? 'luck' : 'bad-luck'}">
+                <div class="modal-content">
+                    <div class="luck-card ${isLuck ? 'luck' : 'bad-luck'}" id="current-luck-card">
+                        <!-- Partículas serão injetadas aqui -->
                         <div class="card-title">${card.title}</div>
                         <div class="card-body">
                             <p>${card.text}</p>
@@ -59,15 +60,33 @@ export class NotificationUI {
                         </div>
                         <div class="card-footer">SANTOS IMOBILIÁRIO</div>
                     </div>
-                    <button id="modal-ok" class="action-button modal-btn">OK</button>
+                    <button id="modal-ok" class="action-button modal-btn" style="margin-top: 20px; display: none;">ENTENDIDO</button>
                 </div>
             `;
 
             document.body.appendChild(overlay);
-            document.getElementById('modal-ok').onclick = () => {
-                overlay.remove();
-                resolve();
-            };
+
+            // Injeta partículas
+            const cardEl = document.getElementById('current-luck-card');
+            const particleCount = 15;
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                p.className = `particle ${isLuck ? 'sparkle' : 'rain-drop'}`;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 2 + 's';
+                cardEl.appendChild(p);
+            }
+
+            // Mostra o botão OK com atraso para forçar a leitura
+            setTimeout(() => {
+                const btn = document.getElementById('modal-ok');
+                btn.style.display = 'block';
+                btn.onclick = () => {
+                    overlay.remove();
+                    resolve();
+                };
+            }, 1500);
         });
     }
 

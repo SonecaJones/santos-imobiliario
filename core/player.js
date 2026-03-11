@@ -37,8 +37,13 @@ export class Player {
      */
     updateMoney(amount) {
         this.money += amount;
+        
+        // Dispara callback global se definido
+        if (window.game && window.game.onMoneyChange) {
+            window.game.onMoneyChange(this, amount);
+        }
+
         if (this.money < 0) {
-            // Lógica de falência será tratada pelo GameController
             console.warn(`${this.name} está com saldo negativo: ${this.money} Mangos!`);
         }
     }
