@@ -11,9 +11,10 @@ Este arquivo contém as instruções e padrões específicos para o desenvolvime
 
 ## 🎨 Padrões Visuais (UI/UX)
 
-- **SVG Inline:** Peças e ícones devem ser injetados via JS como strings SVG para permitir troca de cores dinâmica via `currentColor`.
-- **CSS Grid:** O tabuleiro deve ser responsivo e usar `grid-template-areas` ou coordenadas para posicionamento exato.
-- **Tokens de Design:** Centralizar cores e medidas no `style.css` usando variáveis CSS.
+- **Estilo Cartoon/HQ:** Uso de bordas grossas pretas, cores vibrantes (Neubrutalismo), sombras sólidas e fontes lúdicas ('Fredoka One', 'Bangers').
+- **Responsividade Elástica:** O tabuleiro deve usar unidades `vmin` ou cálculos proporcionais para ocupar o máximo de espaço disponível, mantendo a proporção quadrada.
+- **Layout Adaptável:** "Scale & Stack" - Em desktops, layout lado a lado; em mobile, empilhado verticalmente.
+- **SVG Inline:** Peças e ícones injetados via JS para permitir estilização dinâmica.
 
 ## 🚀 Fluxo de Trabalho do Gemini
 
@@ -26,18 +27,26 @@ Este arquivo contém as instruções e padrões específicos para o desenvolvime
 
 ## ✅ Progresso Atual
 
-- [x] Estrutura de diretórios inicial.
-- [x] Definição de dados do tabuleiro (`core/board.js`).
-- [x] Grid básico do tabuleiro em CSS (`index.html`, `style.css`).
-- [x] Renderização dinâmica das casas (`ui/board-render.js`).
-- [x] Lógica base de jogadores e movimento (`core/player.js`).
-- [x] Sistema de dados e turnos básico (`core/dice.js`, `core/game.js`).
+### Core (Lógica)
+- [x] Estrutura de dados do tabuleiro (`core/board.js`).
+- [x] Lógica de jogadores e movimento (`core/player.js`).
+- [x] Sistema de dados e turnos (`core/dice.js`, `core/game.js`).
 - [x] Cartas de Sorte/Revés (`core/cards.js`).
+- [x] Compra, Aluguel e Hipoteca (`core/game.js`).
 
-## 🚀 Próximos Passos Imediatos
+### UI (Interface)
+- [x] Renderização do tabuleiro elástico (`ui/board-render.js`, `style.css`).
+- [x] Estilo Visual Cartoon/HQ completo.
+- [x] Responsividade Mobile (Scale & Stack).
+- [x] Painel de jogadores com inventário clicável (`ui/player-panel.js`).
+- [x] Animações de dados (`ui/dice-render.js`).
+- [x] Modais de decisão, alertas e títulos de posse (`ui/notifications.js`).
+- [x] Efeitos visuais (Partículas, Dinheiro Flutuante).
 
-- [ ] Implementar `ui/player-panel.js` (Exibição de saldo, propriedades e vez do jogador).
-- [ ] Implementar `ui/dice-render.js` (Animação visual da rolagem de dados).
-- [ ] Finalizar lógica de **Prisão** e **Falência** no `core/game.js`.
-- [ ] Criar modal de **Compra de Propriedade** e **Leilão**.
-- [ ] Integrar tudo no `app.js` para permitir uma partida completa local.
+## 🚀 Próximos Passos
+
+- [ ] Implementar sistema de **Leilão** quando um jogador recusa a compra.
+- [ ] Melhorar a **IA dos Bots** (tomada de decisão mais inteligente para trocas/construção).
+- [ ] Implementar **Multiplayer Online** (WebSocket/Firebase).
+- [ ] Adicionar tela de **Vitoria/Game Over**.
+- [ ] Persistência de estado local (`localStorage`) para retomar partidas.
