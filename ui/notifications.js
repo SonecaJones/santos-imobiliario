@@ -117,7 +117,7 @@ export class NotificationUI {
                             <div class="rent-row">Com 2 casas: <span>M$ ${property.rent[2]}</span></div>
                             <div class="rent-row">Com 3 casas: <span>M$ ${property.rent[3]}</span></div>
                             <div class="rent-row">Com 4 casas: <span>M$ ${property.rent[4]}</span></div>
-                            <div class="rent-row hotel">Com HOTEL: <span>M$ ${property.rent[5]}</span></div>
+                            <div class="rent-row rent-hotel">Com HOTEL: <span>M$ ${property.rent[5]}</span></div>
                             <hr>
                             <div class="deed-footer">
                                 <p>Custo da Casa: M$ ${property.housePrice}</p>

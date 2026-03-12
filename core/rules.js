@@ -21,6 +21,7 @@ export const RULES = {
         RED: '#e74c3c',
         YELLOW: '#f1c40f',
         GREEN: '#27ae60',
-        DARK_BLUE: '#2980b9'
+        DARK_BLUE: '#2980b9',
+        STATION: '#95a5a6' // Cinza comercial
     }
 };

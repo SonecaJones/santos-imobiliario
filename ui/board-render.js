@@ -36,9 +36,12 @@ export function renderBoard(onCellClick) {
             innerHTML += `<div class="mortgage-badge">HIPOTECADO</div>`;
         }
 
-        if (space.type === 'property') {
+        // Se tiver cor, renderiza a barra (para properties e stations)
+        if (space.color) {
             innerHTML += `<div class="cell-color-bar" style="background-color: ${space.color}"></div>`;
-            
+        }
+
+        if (space.type === 'property') {
             // Container de Casas/Hotéis
             if (space.houses > 0) {
                 innerHTML += `<div class="houses-container">`;

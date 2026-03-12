@@ -167,6 +167,19 @@ h1 {
 }
 
 /* Peças Cartoon */
+.pieces-container {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    pointer-events: none; /* Deixa cliques passarem para a célula */
+    z-index: 10;
+}
+
 .player-piece {
     width: 32px;
     height: 32px;
@@ -353,12 +366,21 @@ h1 {
     animation: shake 0.15s infinite;
 }
 
-/* Título de Posse HQ */
+/* Deed Modal (Título de Posse) */
+.deed-modal {
+    padding: 0;
+    overflow: hidden;
+    max-width: 380px; /* Aumentado de 320px para 380px */
+    width: 95%;
+}
+
 .deed-card {
     border: 4px solid #000;
     border-radius: 8px;
     box-shadow: 6px 6px 0px #000;
     overflow: hidden;
+    margin: 15px;
+    background: #fff;
 }
 
 .deed-header {
@@ -374,6 +396,53 @@ h1 {
     box-shadow: 2px 2px 0px #000;
     margin: 10px;
     padding: 8px;
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    background: #fff;
+    color: #000;
+    text-shadow: none;
+}
+
+.deed-body {
+    padding: 15px;
+    font-family: var(--font-main);
+    color: #000;
+}
+
+.rent-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* Aumentado de 8px para 10px */
+    font-size: 1.1rem;
+    line-height: 1.3; /* Aumentado de 1.2 para 1.3 */
+    border-bottom: 2px dashed #ddd;
+    padding-bottom: 4px;
+}
+
+.rent-row.rent-hotel {
+    color: var(--accent-color);
+    font-weight: bold;
+    border-bottom: 3px solid var(--accent-color);
+    margin-top: 5px;
+    padding-top: 5px;
+    font-size: 1.2rem; /* Destaque maior para o hotel */
+}
+
+.deed-footer {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid #000;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.deed-info {
+    padding: 15px;
+    background: #fff;
+    border-top: 4px solid #000;
 }
 
 /* Animação de Dinheiro HQ */
