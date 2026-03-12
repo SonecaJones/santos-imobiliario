@@ -139,6 +139,7 @@ function spawnMoneyAnimation(player, amount) {
     if (!pieceEl) return;
 
     const rect = pieceEl.getBoundingClientRect();
+    // Usa window.pageXOffset e pageYOffset para garantir coordenadas relativas ao viewport
     const x = rect.left + (rect.width / 2);
     const y = rect.top;
 
@@ -146,6 +147,7 @@ function spawnMoneyAnimation(player, amount) {
     el.className = `money-float ${amount > 0 ? 'gain' : 'loss'}`;
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
+    el.style.transform = 'translateX(-50%)'; // Centraliza horizontalmente sobre o ponto X
     el.innerText = `${amount > 0 ? '+' : ''}${amount} M$`;
 
     document.body.appendChild(el);

@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Santos Imobiliário</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bangers&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,11 +28,7 @@
             </div>
         </div>
 
-        <header>
-            <h1>Banco Imobiliário</h1>
-        </header>
-
-        <main style="display: flex; gap: 40px; align-items: flex-start;">
+        <main style="display: flex; gap: 40px; align-items: flex-start; justify-content: center;">
             <div id="board" class="board">
                 <!-- O tabuleiro será renderizado dinamicamente via JS -->
                 <div class="board-center">
@@ -40,8 +39,13 @@
                 </div>
             </div>
 
-            <aside id="player-panels">
-                <!-- Painéis dos jogadores preenchidos via JS -->
+            <aside style="width: 320px; display: flex; flex-direction: column; gap: 20px;">
+                <header>
+                    <h1 style="font-size: 2.8rem; line-height: 0.9; text-align: center; margin-bottom: 10px;">Santos Imobiliário</h1>
+                </header>
+                <div id="player-panels">
+                    <!-- Painéis dos jogadores preenchidos via JS -->
+                </div>
             </aside>
         </main>
 

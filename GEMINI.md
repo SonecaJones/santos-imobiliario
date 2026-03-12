@@ -1,6 +1,6 @@
-# ♊ Gemini CLI — Diretrizes do Projeto Banco Imobiliário
+# ♊ Gemini CLI — Diretrizes do Projeto Santos Imobiliário
 
-Este arquivo contém as instruções e padrões específicos para o desenvolvimento do Banco Imobiliário Online, servindo de complemento ao `CLAUDE.md`.
+Este arquivo contém as instruções e padrões específicos para o desenvolvimento do Santos Imobiliário Online, servindo de complemento ao `CLAUDE.md`.
 
 ## 🛠 Padrões de Código
 
@@ -24,9 +24,20 @@ Este arquivo contém as instruções e padrões específicos para o desenvolvime
 
 ---
 
-## Próximos Passos Imediatos
+## ✅ Progresso Atual
 
-- [ ] Criar estrutura de diretórios.
-- [ ] Implementar `core/board.js` (Dados das casas).
-- [ ] Implementar `index.html` e `style.css` (Grid básico do tabuleiro).
-- [ ] Implementar `ui/board-render.js` (Renderização dinâmica das casas).
+- [x] Estrutura de diretórios inicial.
+- [x] Definição de dados do tabuleiro (`core/board.js`).
+- [x] Grid básico do tabuleiro em CSS (`index.html`, `style.css`).
+- [x] Renderização dinâmica das casas (`ui/board-render.js`).
+- [x] Lógica base de jogadores e movimento (`core/player.js`).
+- [x] Sistema de dados e turnos básico (`core/dice.js`, `core/game.js`).
+- [x] Cartas de Sorte/Revés (`core/cards.js`).
+
+## 🚀 Próximos Passos Imediatos
+
+- [ ] Implementar `ui/player-panel.js` (Exibição de saldo, propriedades e vez do jogador).
+- [ ] Implementar `ui/dice-render.js` (Animação visual da rolagem de dados).
+- [ ] Finalizar lógica de **Prisão** e **Falência** no `core/game.js`.
+- [ ] Criar modal de **Compra de Propriedade** e **Leilão**.
+- [ ] Integrar tudo no `app.js` para permitir uma partida completa local.

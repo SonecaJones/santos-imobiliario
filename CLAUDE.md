@@ -1,8 +1,8 @@
-# 🏦 Banco Imobiliário Online — Planejamento do Projeto
+# 🏦 Santos Imobiliário Online — Planejamento do Projeto
 
 ## Visão Geral
 
-Jogo estilo Banco Imobiliário (Monopoly) rodando diretamente no navegador.
+Jogo estilo Santos Imobiliário (Monopoly) rodando diretamente no navegador.
 Suporte a single player (contra bots), multiplayer local e multiplayer online.
 
 - **Frontend:** HTML + CSS + JavaScript (vanilla ou framework leve)

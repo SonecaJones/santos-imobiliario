@@ -1,6 +1,6 @@
 /**
  * @file core/rules.js
- * @description Regras e constantes fundamentais do Banco Imobiliário.
+ * @description Regras e constantes fundamentais do Santos Imobiliário.
  */
 
 export const RULES = {

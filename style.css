@@ -1,9 +1,15 @@
 :root {
-    --bg-color: #2c3e50;
-    --text-color: #ecf0f1;
-    --board-bg: #f5f6fa;
-    --cell-border: #333;
-    --board-width: 740px; /* 80*2 + 60*9 + borders? adjust if needed */
+    --bg-color: #ffd43b; /* Amarelo vibrante */
+    --text-color: #222;
+    --board-bg: #fff;
+    --cell-border: #000;
+    --accent-color: #ff6b6b; /* Vermelho cartoon */
+    --primary-color: #4dabf7; /* Azul cartoon */
+    --secondary-color: #51cf66; /* Verde cartoon */
+    --shadow-solid: 4px 4px 0px #000;
+    --shadow-solid-large: 8px 8px 0px #000;
+    --font-main: 'Fredoka One', cursive;
+    --font-heading: 'Bangers', cursive;
 }
 
 * {
@@ -13,31 +19,46 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-main);
     background-color: var(--bg-color);
+    background-image: radial-gradient(#fab005 2px, transparent 2px);
+    background-size: 30px 30px;
     color: var(--text-color);
     display: flex;
     justify-content: center;
-    padding: 20px;
+    padding: 10px 20px; /* Reduzi bastante o padding do topo */
+    min-height: 100vh;
+}
+
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem; /* Ajuste leve para caber melhor na lateral */
+    color: #fff;
+    text-shadow: 4px 4px 0px #000;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    -webkit-text-stroke: 1.5px #000;
 }
 
 #game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    justify-content: flex-start; /* Alinhado ao topo */
+    width: 100%;
+    margin-top: 0;
 }
 
+/* Tabuleiro Cartoon */
 .board {
     display: grid;
-    /* 11 colunas: 80px nas pontas, 60px no meio */
-    grid-template-columns: 80px repeat(9, 60px) 80px;
-    /* 11 linhas: 80px nas pontas, 60px no meio */
-    grid-template-rows: 80px repeat(9, 60px) 80px;
+    grid-template-columns: 90px repeat(9, 65px) 90px;
+    grid-template-rows: 90px repeat(9, 65px) 90px;
     background-color: var(--board-bg);
-    border: 4px solid var(--cell-border);
+    border: 6px solid #000;
     position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: var(--shadow-solid-large);
+    border-radius: 12px;
 }
 
 .board-center {
@@ -48,27 +69,37 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background-color: #dcdde1;
-    border: 2px solid var(--cell-border);
+    background-color: #f8f9fa;
+    border: 4px solid #000;
+    margin: 10px;
+    border-radius: 8px;
+    background-image: linear-gradient(45deg, #e9ecef 25%, transparent 25%, transparent 75%, #e9ecef 75%, #e9ecef), 
+                      linear-gradient(45deg, #e9ecef 25%, transparent 25%, transparent 75%, #e9ecef 75%, #e9ecef);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
 }
 
-/* Células base */
+/* Células Cartoon */
 .cell {
-    border: 1px solid var(--cell-border);
+    border: 2px solid #000;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 5px;
-    font-size: 10px;
+    padding: 6px 4px;
+    font-size: 11px;
     text-align: center;
-    color: #333;
-    overflow: hidden;
+    color: #000;
     position: relative;
+    background: #fff;
+    transition: transform 0.1s;
 }
 
-/* Posicionamento automático via script será feito depois, 
-   aqui definimos apenas estilos específicos */
+.cell:hover {
+    z-index: 50;
+    background-color: #fff9db;
+    transform: scale(1.05);
+}
 
 .cell-property {
     background-color: #fff;
@@ -76,464 +107,307 @@ body {
 
 .cell-color-bar {
     width: 100%;
-    height: 15px;
-    border-bottom: 1px solid var(--cell-border);
+    height: 18px;
+    border-bottom: 3px solid #000;
     position: absolute;
     top: 0;
 }
 
 .cell-name {
-    margin-top: 18px;
+    margin-top: 20px;
     font-weight: bold;
     text-transform: uppercase;
-    font-size: 9px;
+    line-height: 1;
+    font-size: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .cell-price {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 11px;
+    background: #000;
+    color: #fff;
+    padding: 1px 4px;
+    border-radius: 4px;
+    margin-top: auto;
 }
 
-/* Casas e Hotéis */
+/* Casas e Hotéis com estilo 3D Cartoon */
 .houses-container {
     position: absolute;
-    top: 2px;
+    top: 4px;
     left: 0;
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 2px;
+    gap: 3px;
     z-index: 5;
 }
 
 .house {
-    width: 8px;
-    height: 8px;
-    background-color: #27ae60;
-    border: 1px solid #1e8449;
-    border-radius: 1px;
+    width: 12px;
+    height: 12px;
+    background-color: #51cf66;
+    border: 2px solid #000;
+    border-radius: 3px;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
 }
 
 .hotel {
-    width: 12px;
-    height: 12px;
-    background-color: #e74c3c;
-    border: 1px solid #c0392b;
-    border-radius: 1px;
+    width: 18px;
+    height: 18px;
+    background-color: #ff6b6b;
+    border: 2px solid #000;
+    border-radius: 3px;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
 }
 
-/* Propriedade Hipotecada */
-.cell.mortgaged {
-    filter: grayscale(0.8);
-    opacity: 0.8;
-}
-
-.mortgage-badge {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    background: rgba(192, 57, 43, 0.9);
-    color: white;
-    font-weight: bold;
-    padding: 2px 5px;
-    font-size: 8px;
-    border: 1px solid white;
-    white-space: nowrap;
-    z-index: 20;
-    pointer-events: none;
-}
-
-/* Cantos */
-.cell-start, .cell-jail, .cell-parking, .cell-go-jail {
-    background-color: #fff;
-    font-weight: bold;
-}
-
-/* Peças dos Jogadores */
-.pieces-container {
-    position: absolute;
-    bottom: 5px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 2px;
-    pointer-events: none; /* Deixa cliques passarem para a célula */
-    z-index: 10;
-}
-
+/* Peças Cartoon */
 .player-piece {
-    width: 24px;
-    height: 24px;
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
-    transition: transform 0.3s ease-out;
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(3px 3px 0px #000);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.player-piece svg {
-    display: block;
-}
-
-#player-panels {
-    width: 280px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.player-panel {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-}
-
-.player-panel.active {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    outline: 3px solid #f1c40f;
-}
-
-.player-panel.bankrupt {
-    opacity: 0.6;
-    filter: grayscale(1);
-}
-
-.player-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.player-name {
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.player-money {
-    color: #27ae60;
-    font-weight: bold;
-    font-size: 1.2em;
-}
-
-.status-tag {
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.status-tag.jail { background: #e67e22; color: white; }
-.status-tag.bankrupt { background: #c0392b; color: white; }
-
-/* Botão de Ação Central */
+/* Botão de Ação Estilo HQ */
 .action-button {
-    background-color: #27ae60;
+    background-color: var(--primary-color);
     color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-size: 1.2em;
-    font-weight: bold;
+    border: 4px solid #000;
+    padding: 15px 40px;
+    border-radius: 12px;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    letter-spacing: 2px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: transform 0.1s, background-color 0.2s;
+    box-shadow: var(--shadow-solid);
+    transition: transform 0.1s, box-shadow 0.1s;
     margin-bottom: 20px;
+    text-shadow: 2px 2px 0px #000;
 }
 
 .action-button:hover {
-    background-color: #2ecc71;
-    transform: translateY(-2px);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000;
+    background-color: #74c0fc;
 }
 
 .action-button:active {
-    transform: translateY(1px);
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px #000;
 }
 
 .action-button:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
+    background-color: #adb5bd;
+    box-shadow: 2px 2px 0px #000;
     transform: none;
+    cursor: not-allowed;
+    filter: grayscale(1);
 }
 
-/* Dados Visuais */
-#dice-area {
-    margin: 15px 0;
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Painéis de Jogadores */
+.player-panel {
+    background: #fff;
+    padding: 15px;
+    border: 4px solid #000;
+    border-radius: 12px;
+    box-shadow: var(--shadow-solid);
+    margin-bottom: 15px;
 }
 
-.dice-wrapper {
-    display: flex;
-    gap: 15px;
+.player-panel.active {
+    background-color: #fff9db;
+    transform: scale(1.05) rotate(-1deg);
+    border-color: var(--accent-color);
 }
 
-.dice-wrapper.rolling {
-    animation: shake 0.1s infinite;
+.player-money {
+    color: #2b8a3e;
+    font-size: 1.5rem;
+    font-family: var(--font-heading);
 }
 
-@keyframes shake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    50% { transform: translate(-1px, -1px) rotate(2deg); }
-    100% { transform: translate(1px, 1px) rotate(0deg); }
-}
-
+/* Dados Cartoon */
 .die {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     background: white;
-    border-radius: 10px;
-    border: 2px solid #333;
+    border-radius: 12px;
+    border: 4px solid #000;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    padding: 6px;
+    padding: 8px;
     gap: 4px;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
 }
 
 .dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     background: transparent;
     border-radius: 50%;
     margin: auto;
 }
 
 .dot.visible {
-    background: #222;
+    background: #000;
+    box-shadow: 1px 1px 0px rgba(255,255,255,0.5);
 }
 
-/* Modais */
+/* Modais HQ */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.8);
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 10000;
 }
 
 .modal-content {
-    background: white;
+    background: #fff;
+    border: 6px solid #000;
+    border-radius: 20px;
+    box-shadow: 15px 15px 0px rgba(0,0,0,0.4);
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
     padding: 30px;
-    border-radius: 15px;
-    max-width: 400px;
-    text-align: center;
-    color: #333;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    animation: modal-pop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
-@keyframes modal-pop {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+/* Setup Modal */
+.setup-modal {
+    max-width: 550px;
+    width: 95%;
 }
 
-.modal-content h3 {
-    margin-bottom: 15px;
-    font-size: 1.5em;
-    color: var(--bg-color);
-}
-
-.modal-content p {
-    font-size: 1.1em;
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-.modal-actions {
+.player-setup-item {
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #f1f2f6;
+    padding: 10px;
+    border-radius: 12px;
+    border: 3px solid #000;
+    margin-bottom: 10px;
+    align-items: center;
 }
 
-.modal-btn {
-    padding: 10px 30px;
-    font-size: 1em;
-    margin-bottom: 0;
+.player-setup-item input[type="text"] {
+    flex: 1;
+    min-width: 150px;
+    font-family: var(--font-main);
+    padding: 8px;
+    border: 2px solid #000;
+    border-radius: 8px;
 }
 
-.modal-btn.secondary {
-    background-color: #7f8c8d;
+.player-setup-item select, 
+.player-setup-item input[type="color"] {
+    padding: 6px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    font-family: var(--font-main);
 }
 
-.modal-btn.secondary:hover {
-    background-color: #95a5a6;
+.modal-content h2, .modal-content h3 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    text-shadow: 2px 2px 0px #000;
+    -webkit-text-stroke: 1px #000;
 }
 
-/* Deed Modal (Título de Posse) */
-.deed-modal {
-    padding: 0;
-    overflow: hidden;
-    max-width: 320px;
+/* Log de Jogo */
+#game-log {
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1);
+    font-family: 'Fredoka One', cursive;
+    height: 150px; /* Altura fixa para evitar pulos no layout */
+    width: 100%;
+    overflow-y: auto;
+    margin-top: 5px; /* Espaço entre os dados e o log */
 }
 
+/* Animações */
+@keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg) scale(1.1); }
+    75% { transform: rotate(-5deg) scale(1.1); }
+}
+
+.dice-wrapper.rolling .die {
+    animation: shake 0.15s infinite;
+}
+
+/* Título de Posse HQ */
 .deed-card {
-    border: 2px solid #333;
-    margin: 15px;
-    background: white;
-    text-align: center;
+    border: 4px solid #000;
+    border-radius: 8px;
+    box-shadow: 6px 6px 0px #000;
+    overflow: hidden;
 }
 
 .deed-header {
-    padding: 10px;
-    font-size: 10px;
-    font-weight: bold;
-    color: white;
-    text-transform: uppercase;
-    border-bottom: 2px solid #333;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    border-bottom: 4px solid #000;
+    padding: 15px;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
 }
 
 .deed-name {
-    font-size: 1.4em;
-    margin-top: 5px;
-    background: white;
-    color: #333;
-    padding: 5px;
-    border: 1px solid #333;
-    text-shadow: none;
+    border: 3px solid #000;
+    border-radius: 4px;
+    box-shadow: 2px 2px 0px #000;
+    margin: 10px;
+    padding: 8px;
 }
 
-.deed-body {
-    padding: 15px;
-    font-size: 13px;
-    color: #333;
-    text-align: left;
+/* Animação de Dinheiro HQ */
+.money-float {
+    position: fixed;
+    font-family: var(--font-heading);
+    font-size: 48px;
+    pointer-events: none;
+    z-index: 20000;
+    -webkit-text-stroke: 2px #000;
+    filter: drop-shadow(4px 4px 0px #000);
+    animation: money-float-up 1.5s cubic-bezier(0.18, 0.89, 0.32, 1.275) forwards;
 }
 
-.rent-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4px;
+.money-float.gain { color: #51cf66; }
+.money-float.loss { color: #ff6b6b; }
+
+@keyframes money-float-up {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    20% { opacity: 1; transform: translateY(-20px) scale(1.2); }
+    100% { transform: translateY(-150px) scale(1); opacity: 0; }
 }
 
-.rent-row.hotel {
-    font-weight: bold;
-    color: #c0392b;
-}
-
-.deed-footer {
-    font-size: 11px;
-    text-align: center;
-    margin-top: 10px;
-    line-height: 1.4;
-}
-
-.deed-info {
-    padding: 15px;
-    background: #f5f6fa;
-    border-top: 1px solid #ddd;
-}
-
-.cell {
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.cell:hover {
-    background-color: #f1f2f6;
-}
-
-/* Animações de Cartas */
-.card-modal .modal-content {
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-}
-
-.luck-card {
-    margin: 15px;
-    height: 220px;
-    width: 300px;
-    border-radius: 15px;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    border: 4px solid white;
-    outline: 2px solid #333;
-    position: relative;
-    overflow: hidden;
-    backface-visibility: hidden;
-    animation: card-entrance 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-@keyframes card-entrance {
-    from { transform: scale(0) rotateY(180deg); opacity: 0; }
-    to { transform: scale(1) rotateY(0deg); opacity: 1; }
-}
-
-.luck-card.luck {
-    background: linear-gradient(135deg, #f1c40f, #e67e22);
-    color: white;
-    animation: card-entrance 0.6s ease-out, luck-glow 2s infinite alternate;
-}
-
-.luck-card.bad-luck {
-    background: linear-gradient(135deg, #34495e, #2c3e50);
-    color: white;
-    border-color: #e74c3c;
-    animation: card-entrance 0.6s ease-out, bad-luck-shake 0.5s ease-in-out infinite;
-}
-
-@keyframes luck-glow {
-    from { box-shadow: 0 0 20px rgba(241, 196, 15, 0.5); }
-    to { box-shadow: 0 0 40px rgba(241, 196, 15, 0.9), 0 0 60px rgba(230, 126, 34, 0.6); }
-}
-
-@keyframes bad-luck-shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-2px) rotate(-1deg); }
-    75% { transform: translateX(2px) rotate(1deg); }
-}
-
-.card-title {
-    font-size: 1.8em;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.card-body p {
-    font-size: 1.2em;
-    line-height: 1.4;
-    margin: 10px 0;
-    animation: text-fade-in 1s ease-out 0.5s both;
-}
-
-@keyframes text-fade-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Partículas de Efeito */
+/* Partículas para Cartas de Sorte */
 .particle {
     position: absolute;
     pointer-events: none;
-    z-index: -1;
+    z-index: 5;
 }
 
 .sparkle {
-    width: 10px; height: 10px;
-    background: white;
+    width: 12px; height: 12px;
+    background: #ffd43b;
+    border: 2px solid #000;
     border-radius: 50%;
     animation: sparkle-anim 1s infinite linear;
 }
@@ -544,8 +418,9 @@ body {
 }
 
 .rain-drop {
-    width: 2px; height: 15px;
-    background: rgba(255,255,255,0.3);
+    width: 4px; height: 20px;
+    background: #4dabf7;
+    border: 1px solid #000;
     animation: rain-anim 0.5s infinite linear;
 }
 
@@ -554,98 +429,15 @@ body {
     100% { transform: translateY(220px); }
 }
 
-
-/* Setup Modal */
-.setup-modal {
-    max-width: 600px;
-    width: 90%;
+/* Responsividade Mobile */
+@media (max-width: 1000px) {
+    main {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .board {
+        transform: scale(0.8);
+        margin: -50px 0;
+    }
 }
-
-#player-setup-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
-    max-height: 300px;
-    overflow-y: auto;
-    padding-right: 10px;
-}
-
-.player-setup-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f1f2f6;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
-
-.player-setup-item input[type="text"] {
-    flex: 1;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-.player-setup-item select, .player-setup-item input[type="color"] {
-    padding: 8px;
-    border-radius: 4px;
-}
-
-.remove-player-btn {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.setup-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-#game-log {
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    font-size: 12px;
-    background: rgba(0,0,0,0.05);
-    padding: 10px;
-    border-radius: 5px;
-    color: #2c3e50;
-    border: 1px inset rgba(0,0,0,0.1);
-}
-
-.log-entry {
-    margin-bottom: 4px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    padding-bottom: 2px;
-}
-
-/* Animação de Dinheiro */
-.money-float {
-    position: fixed;
-    font-weight: bold;
-    font-size: 24px;
-    pointer-events: none;
-    z-index: 2000;
-    animation: money-float-up 1.5s ease-out forwards;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-}
-
-.money-float.gain { color: #2ecc71; }
-.money-float.loss { color: #e74c3c; }
-
-@keyframes money-float-up {
-    0% { transform: translateY(0); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translateY(-100px); opacity: 0; }
-}
-
-
