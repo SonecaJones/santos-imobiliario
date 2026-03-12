@@ -3,7 +3,7 @@
  * @description Gerencia a exibição dos dados dos jogadores (saldo, propriedades).
  */
 
-export function renderPlayerPanels(players, currentPlayerIndex) {
+export function renderPlayerPanels(players, currentPlayerIndex, onPanelClick) {
     const container = document.getElementById('player-panels');
     if (!container) return;
 
@@ -29,6 +29,13 @@ export function renderPlayerPanels(players, currentPlayerIndex) {
                 🏠 ${player.properties.length} Propriedades
             </div>
         `;
+
+        // Adiciona o evento de clique para ver propriedades
+        panel.onclick = () => {
+            if (onPanelClick && !player.bankrupt) {
+                onPanelClick(player);
+            }
+        };
 
         container.appendChild(panel);
     });

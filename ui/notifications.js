@@ -5,6 +5,35 @@
 
 export class NotificationUI {
     /**
+     * Exibe um alerta simples com botão de OK.
+     * @param {string} title 
+     * @param {string} message 
+     */
+    static async alert(title, message) {
+        return new Promise((resolve) => {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            
+            overlay.innerHTML = `
+                <div class="modal-content">
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                    <div class="modal-actions">
+                        <button id="modal-ok" class="action-button modal-btn">OK</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+
+            document.getElementById('modal-ok').onclick = () => {
+                overlay.remove();
+                resolve();
+            };
+        });
+    }
+
+    /**
      * Exibe um modal de confirmação (Sim/Não).
      * @param {string} title 
      * @param {string} message 
