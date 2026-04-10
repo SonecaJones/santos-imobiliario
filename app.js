@@ -18,8 +18,17 @@ let game;
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Inicializando Santos Imobiliário...');
-    
-    // 1. Inicializa a interface de Setup
+
+    // 1. Menu de impressão
+    const printBtn = document.getElementById('print-menu-btn');
+    const printDropdown = document.getElementById('print-menu-dropdown');
+    printBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        printDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', () => printDropdown.classList.remove('open'));
+
+    // 2. Inicializa a interface de Setup
     new SetupUI((selectedPlayers) => {
         startGame(selectedPlayers);
     });
