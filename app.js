@@ -19,6 +19,9 @@ let game;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Inicializando Santos Imobiliário...');
 
+    // 0. Ano do rodapé
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
     // 1. Menu de impressão
     const printBtn = document.getElementById('print-menu-btn');
     const printDropdown = document.getElementById('print-menu-dropdown');

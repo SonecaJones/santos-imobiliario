@@ -390,6 +390,20 @@ body {
     margin-top: 10px;
 }
 
+/* Rodapé */
+#game-footer {
+    text-align: center;
+    padding: 6px 0 10px;
+    font-size: 11px;
+    color: rgba(255,255,255);
+    letter-spacing: 0.04em;
+}
+
+.footer-sep {
+    margin: 0 6px;
+    opacity: 0.5;
+}
+
 /* Modais e Notificações */
 .modal-overlay {
     position: fixed;
