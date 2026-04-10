@@ -74,7 +74,7 @@ export function renderBoard(onCellClick) {
 /**
  * Mapeia o índice da casa (0-39) para coordenadas do Grid (1-11)
  */
-function getGridPosition(index) {
+export function getGridPosition(index) {
     // 0: Bottom-Right
     if (index === 0) return { row: 11, col: 11 };
     

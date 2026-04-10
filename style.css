@@ -112,6 +112,31 @@ body {
     transform: scale(1.05);
 }
 
+.cell.has-players {
+    --push-x: 0%;
+    --push-y: 0%;
+    z-index: 20;
+    background-color: #fffbe6;
+    transform: scale(1.32) translate(var(--push-x), var(--push-y));
+    box-shadow: 0 0 0 3px #f1c40f, 0 6px 20px rgba(0,0,0,0.4);
+    border-color: #f1c40f;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.cell.has-players:hover {
+    z-index: 50;
+    transform: scale(1.38) translate(var(--push-x), var(--push-y));
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .cell.has-players {
+        transform: none;
+        box-shadow: 0 0 0 3px #f1c40f;
+    }
+    .cell.has-players:hover { transform: none; }
+}
+
 .cell-color-bar {
     width: 100%;
     height: 25%;
