@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Santos Imobiliário — Títulos de Posse</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bangers&display=swap');
+
+@page { size: A4 portrait; margin: 10mm; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Fredoka One', 'Arial Rounded MT Bold', Arial, sans-serif;
+  background: white;
+}
+
+/* ── Explicit page wrappers ── */
+.page-wrap {
+  break-before: page;
+  page-break-before: page;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.page-wrap:first-of-type {
+  break-before: avoid;
+  page-break-before: avoid;
+}
+
+h1.page-title {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 16pt;
+  letter-spacing: 3px;
+  text-align: center;
+  padding: 6mm 0 5mm;
+  color: #2c3e50;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5mm;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+/* ── Deed card ── */
+.deed {
+  width: 56mm;
+  height: 87mm;
+  border: 2px solid #000;
+  border-radius: 3mm;
+  overflow: hidden;
+  break-inside: avoid;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 2px 2px 0 #000;
+}
+
+/* color band */
+.deed-band {
+  padding: 2mm 2mm 1.5mm;
+  text-align: center;
+  font-family: 'Bangers', sans-serif;
+  font-size: 5.5pt;
+  letter-spacing: 1.5px;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  border-bottom: 2px solid rgba(0,0,0,0.35);
+  flex-shrink: 0;
+}
+
+/* title */
+.deed-title {
+  font-size: 4.5pt;
+  text-align: center;
+  letter-spacing: 0.8px;
+  color: #777;
+  padding: 1.5mm 2mm 0;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* name */
+.deed-name {
+  font-family: 'Bangers', sans-serif;
+  font-size: 11pt;
+  letter-spacing: 0.5px;
+  text-align: center;
+  padding: 0.5mm 2mm 1.5mm;
+  line-height: 1.1;
+  border-bottom: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+/* rent table */
+.deed-rents {
+  flex-grow: 1;
+  padding: 1.5mm 2.5mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.deed-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 5pt;
+  line-height: 1;
+  padding: 0.8mm 0;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+.deed-row:last-child { border-bottom: none; }
+.deed-row .lbl { color: #555; }
+.deed-row .val { font-weight: bold; color: #111; }
+
+/* dot leaders */
+.deed-row .dots {
+  flex-grow: 1;
+  border-bottom: 1px dotted #ccc;
+  margin: 0 1mm;
+  height: 4pt;
+}
+
+/* footer */
+.deed-footer {
+  border-top: 1.5px solid #000;
+  background: #f7f7f7;
+  padding: 1.5mm 2mm;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1mm 2mm;
+}
+
+.deed-footer.full { grid-template-columns: 1fr; }
+
+.deed-fitem {
+  text-align: center;
+  font-size: 4.5pt;
+  line-height: 1.3;
+  color: #555;
+}
+.deed-fitem span {
+  display: block;
+  font-weight: bold;
+  font-size: 5.5pt;
+  color: #111;
+}
+
+/* station variant */
+.deed.station .deed-rents { justify-content: flex-start; gap: 1.5mm; }
+</style>
+</head>
+<body>
+
+<div id="deeds-container"></div>
+
+<script>
+const PROPERTIES = [
+  { name:'Morro do Jabaquara',   price:600,  color:'#9b59b6', group:'Roxo',         housePrice:500,  rent:[50,250,750,2250,4000,5500]          },
+  { name:'Morro da Nova Cintra', price:600,  color:'#9b59b6', group:'Roxo',         housePrice:500,  rent:[50,250,750,2250,4000,5500]          },
+  { name:'Areia Branca',         price:1000, color:'#3498db', group:'Azul Claro',   housePrice:500,  rent:[100,500,1500,4500,6250,7500]        },
+  { name:'Castelo',              price:1000, color:'#3498db', group:'Azul Claro',   housePrice:500,  rent:[100,500,1500,4500,6250,7500]        },
+  { name:'Bom Retiro',           price:1200, color:'#3498db', group:'Azul Claro',   housePrice:500,  rent:[120,600,1800,5000,7000,9000]        },
+  { name:'Macuco',               price:1400, color:'#e84393', group:'Rosa',         housePrice:1000, rent:[150,700,2000,5500,7500,9500]        },
+  { name:'Estuário',             price:1400, color:'#e84393', group:'Rosa',         housePrice:1000, rent:[150,700,2000,5500,7500,9500]        },
+  { name:'Encruzilhada',         price:1600, color:'#e84393', group:'Rosa',         housePrice:1000, rent:[180,800,2200,6000,8000,10000]       },
+  { name:'Marapé',               price:1800, color:'#e67e22', group:'Laranja',      housePrice:1000, rent:[200,900,2500,7000,8750,10500]       },
+  { name:'Campo Grande',         price:1800, color:'#e67e22', group:'Laranja',      housePrice:1000, rent:[200,900,2500,7000,8750,10500]       },
+  { name:'Vila Belmiro',         price:2000, color:'#e67e22', group:'Laranja',      housePrice:1000, rent:[220,1000,3000,7500,9250,11000]      },
+  { name:'Vila Mathias',         price:2200, color:'#e74c3c', group:'Vermelho',     housePrice:1500, rent:[250,1100,3300,8000,9750,11500]      },
+  { name:'José Menino',          price:2200, color:'#e74c3c', group:'Vermelho',     housePrice:1500, rent:[250,1100,3300,8000,9750,11500]      },
+  { name:'Pompeia',              price:2400, color:'#e74c3c', group:'Vermelho',     housePrice:1500, rent:[280,1200,3600,8500,10250,12000]     },
+  { name:'Aparecida',            price:2600, color:'#f1c40f', group:'Amarelo',      housePrice:1500, rent:[300,1300,3900,9000,11000,12750]     },
+  { name:'Embaré',               price:2600, color:'#f1c40f', group:'Amarelo',      housePrice:1500, rent:[300,1300,3900,9000,11000,12750]     },
+  { name:'Ponta da Praia',       price:2800, color:'#f1c40f', group:'Amarelo',      housePrice:1500, rent:[320,1400,4200,9500,11500,13500]     },
+  { name:'Boqueirão',            price:3000, color:'#27ae60', group:'Verde',        housePrice:2000, rent:[350,1500,4500,10000,12000,14000]    },
+  { name:'Canal 3',              price:3000, color:'#27ae60', group:'Verde',        housePrice:2000, rent:[350,1500,4500,10000,12000,14000]    },
+  { name:'Canal 4',              price:3200, color:'#27ae60', group:'Verde',        housePrice:2000, rent:[400,1700,5000,11000,13000,15000]    },
+  { name:'Gonzaga',              price:3500, color:'#2980b9', group:'Azul Escuro',  housePrice:2000, rent:[450,2000,6000,12000,14500,17000]    },
+  { name:'Av. Ana Costa',        price:4000, color:'#2980b9', group:'Azul Escuro',  housePrice:2000, rent:[500,2500,7500,13500,15500,18500]    },
+];
+
+const STATIONS = [
+  { name:'Terminal Valongo',         price:2000, rent:[250,500,1000,2000] },
+  { name:'Balsa Santos-Guarujá',     price:1500, rent:[50,100]            },
+  { name:'VLT Estação Ana Costa',    price:2000, rent:[250,500,1000,2000] },
+  { name:'Rodoviária de Santos',     price:2000, rent:[250,500,1000,2000] },
+  { name:'Cia. Docas (CODESP)',      price:1500, rent:[50,100]            },
+  { name:'Porto de Santos',          price:2000, rent:[250,500,1000,2000] },
+];
+
+const rentLabels = [
+  'Aluguel', 'Com 1 casa', 'Com 2 casas',
+  'Com 3 casas', 'Com 4 casas', 'Com HOTEL'
+];
+
+function fmt(n) {
+  return 'R$\u00a0' + n.toLocaleString('pt-BR');
+}
+
+function row(label, value) {
+  return `<div class="deed-row">
+    <span class="lbl">${label}</span>
+    <span class="dots"></span>
+    <span class="val">${fmt(value)}</span>
+  </div>`;
+}
+
+// Build all deed elements first
+const allDeeds = [];
+
+PROPERTIES.forEach(p => {
+  const mortgage = Math.floor(p.price / 2);
+  const div = document.createElement('div');
+  div.className = 'deed';
+  const bandTextColor = (p.color === '#f1c40f') ? '#5a4000' : 'white';
+  div.innerHTML = `
+    <div class="deed-band" style="background:${p.color};color:${bandTextColor}">
+      TÍTULO DE POSSE — ${p.group.toUpperCase()}
+    </div>
+    <div class="deed-title">Santos Imobiliário</div>
+    <div class="deed-name">${p.name}</div>
+    <div class="deed-rents">
+      ${rentLabels.map((lbl, i) => row(lbl, p.rent[i])).join('')}
+    </div>
+    <div class="deed-footer">
+      <div class="deed-fitem">Casa<span>${fmt(p.housePrice)}</span></div>
+      <div class="deed-fitem">Hotel<span>${fmt(p.housePrice)}</span></div>
+      <div class="deed-fitem">Preço<span>${fmt(p.price)}</span></div>
+      <div class="deed-fitem">Hipoteca<span>${fmt(mortgage)}</span></div>
+    </div>
+  `;
+  allDeeds.push(div);
+});
+
+STATIONS.forEach(s => {
+  const mortgage = Math.floor(s.price / 2);
+  const div = document.createElement('div');
+  div.className = 'deed station';
+  const labels4 = ['1 estação','2 estações','3 estações','4 estações'];
+  const labels2 = ['1 estação','2 estações'];
+  const lbls = s.rent.length === 4 ? labels4 : labels2;
+  div.innerHTML = `
+    <div class="deed-band" style="background:#7f8c8d">
+      ESTAÇÃO DE TRANSPORTE
+    </div>
+    <div class="deed-title">Santos Imobiliário</div>
+    <div class="deed-name">${s.name}</div>
+    <div class="deed-rents">
+      ${s.rent.map((r, i) => row(lbls[i], r)).join('')}
+    </div>
+    <div class="deed-footer full">
+      <div class="deed-fitem">Preço<span>${fmt(s.price)}</span></div>
+      <div class="deed-fitem">Hipoteca<span>${fmt(mortgage)}</span></div>
+    </div>
+  `;
+  allDeeds.push(div);
+});
+
+// Group into explicit pages of 9 (3 cols × 3 rows)
+const PER_PAGE = 9;
+const container = document.getElementById('deeds-container');
+
+for (let i = 0; i < allDeeds.length; i += PER_PAGE) {
+  const wrap = document.createElement('div');
+  wrap.className = 'page-wrap';
+
+  if (i === 0) {
+    const h1 = document.createElement('h1');
+    h1.className = 'page-title';
+    h1.textContent = '📋 Títulos de Posse';
+    wrap.appendChild(h1);
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  allDeeds.slice(i, i + PER_PAGE).forEach(el => grid.appendChild(el));
+  wrap.appendChild(grid);
+  container.appendChild(wrap);
+}
+</script>
+</body>
+</html>

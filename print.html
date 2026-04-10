@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Santos Imobiliário — Tabuleiro para Impressão A2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bangers&display=swap');
+
+@page {
+  size: A2 portrait;
+  margin: 12mm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Fredoka One', 'Arial Rounded MT Bold', Arial, sans-serif;
+  background: #ffd43b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10mm;
+  gap: 6mm;
+}
+
+@media print {
+  body { background: white; padding: 0; gap: 4mm; }
+}
+
+/* ── Board ── */
+.board {
+  display: grid;
+  grid-template-columns: 65mm repeat(9, 1fr) 65mm;
+  grid-template-rows:    65mm repeat(9, 1fr) 65mm;
+  width: 390mm;
+  height: 390mm;
+  border: 2.5px solid #000;
+  background: white;
+  flex-shrink: 0;
+}
+
+/* ── Cell base ── */
+.cell {
+  border: 1.5px solid #000;
+  overflow: hidden;
+  position: relative;
+  background: white;
+}
+
+/* ── Cell inner ── */
+.ci {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+/* ── Color bar ── */
+.cb {
+  width: 100%;
+  height: 8mm;
+  flex-shrink: 0;
+  border-bottom: 1.5px solid #000;
+}
+
+/* ── Text ── */
+.cn { /* cell name */
+  font-size: 5.5pt;
+  font-weight: bold;
+  line-height: 1.2;
+  padding: 1mm 1mm 0;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cp { /* cell price */
+  font-size: 5.5pt;
+  font-weight: bold;
+  padding: 0 1mm 1mm;
+}
+.cr { /* cell rent */
+  font-size: 4pt;
+  line-height: 1.3;
+  padding: 0 0.5mm;
+  color: #444;
+}
+
+/* ── Bottom row: no rotation — color bar at top (inner edge, toward center) ── */
+.bot .ci { /* as-is */ }
+
+/* ── Top row: rotate 180° so color bar faces inward (toward center) ── */
+.top .ci { transform: rotate(180deg); }
+
+/* ── Left column: inner div rotated +90° so color bar faces inward (right side) ── */
+.lft .ci {
+  width: 29mm;
+  height: 65mm;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(90deg);
+}
+
+/* ── Right column: inner div rotated -90° so color bar faces inward (left side) ── */
+.rgt .ci {
+  width: 29mm;
+  height: 65mm;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+}
+
+/* ── Chest ── */
+.chest .ci {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  justify-content: center;
+  gap: 1mm;
+}
+.chest .ci .cn { color: white; font-size: 5pt; flex-grow: 0; }
+.chest-ico { font-size: 11pt; line-height: 1; }
+
+/* ── Tax ── */
+.tax .ci { background: #ecf0f1; justify-content: center; gap: 1mm; }
+.tax-ico { font-size: 10pt; }
+.tax .cp { color: #c0392b; font-size: 6pt; }
+
+/* ── Station ── */
+.station .ci { justify-content: flex-start; }
+
+/* ── Corners ── */
+.corner .ci {
+  justify-content: center;
+  align-items: center;
+  gap: 1.5mm;
+  padding: 3mm;
+}
+.ctitle {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 8pt;
+  letter-spacing: 1.5px;
+  line-height: 1.15;
+  text-align: center;
+}
+.csub {
+  font-size: 4.5pt;
+  line-height: 1.5;
+  text-align: center;
+  color: #444;
+}
+.cico { font-size: 18pt; line-height: 1; }
+
+/* Start */
+.c-start .ci { background: linear-gradient(135deg, #c8f7c5, #82e06a); }
+.c-start .ctitle { color: #1a7a30; }
+.c-start .cico { font-size: 22pt; }
+
+/* Jail */
+.c-jail .ci { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+.c-jail .ctitle { color: #2d3436; }
+
+/* Parking */
+.c-park .ci { background: linear-gradient(135deg, #dfe6e9, #b2bec3); }
+.c-park .ctitle { color: #2d3436; font-size: 6.5pt; }
+
+/* Go Jail */
+.c-gojail .ci { background: linear-gradient(135deg, #ff7675, #d63031); }
+.c-gojail .ctitle { color: white; font-size: 9pt; }
+.c-gojail .cico { color: white; }
+
+/* ── Board center ── */
+.center {
+  grid-row: 2 / 11;
+  grid-column: 2 / 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 5mm;
+  gap: 4mm;
+}
+.center-title {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 36pt;
+  letter-spacing: 4px;
+  color: #2c3e50;
+  text-align: center;
+  line-height: 1;
+}
+.center-sub {
+  font-size: 7.5pt;
+  color: #7f8c8d;
+  text-align: center;
+}
+.center-info {
+  font-size: 6pt;
+  color: #555;
+  text-align: center;
+  line-height: 1.8;
+  border: 1.5px solid #ddd;
+  border-radius: 2mm;
+  padding: 3mm 5mm;
+}
+.dice-row {
+  display: flex;
+  gap: 5mm;
+}
+.die {
+  width: 16mm; height: 16mm;
+  border: 2px solid #2c3e50;
+  border-radius: 3mm;
+  background: white;
+  box-shadow: 2px 2px 0 #000;
+  display: grid;
+  place-items: center;
+}
+
+/* ── Legend ── */
+.legend {
+  width: 390mm;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 3mm;
+  padding: 5mm 6mm;
+}
+.legend-title {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 13pt;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 4mm;
+}
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5mm;
+}
+.lg { border: 1.5px solid #ccc; border-radius: 2mm; overflow: hidden; }
+.lg-h {
+  padding: 1.5mm 2mm;
+  font-weight: bold;
+  font-size: 6pt;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.lg-b {
+  padding: 1.5mm 2mm;
+  font-size: 4.8pt;
+  line-height: 1.65;
+}
+.lg-b table { width: 100%; border-collapse: collapse; }
+.lg-b td { padding: 0.2mm 0.5mm; font-size: 4.8pt; }
+.lg-b td:last-child { text-align: right; font-weight: bold; }
+.lg-b .rent-row td { color: #555; font-size: 4.3pt; }
+
+.legend-rules {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5mm;
+  margin-top: 3mm;
+}
+.rule-box {
+  background: #f8f9fa;
+  border: 1.5px solid #dee2e6;
+  border-radius: 2mm;
+  padding: 2mm 3mm;
+  font-size: 5.2pt;
+  line-height: 1.6;
+}
+.rule-box strong {
+  display: block;
+  font-size: 6pt;
+  margin-bottom: 0.8mm;
+}
+</style>
+</head>
+<body>
+
+<div class="board">
+
+  <!-- CENTER -->
+  <div class="center">
+    <div class="center-title">Santos<br>Imobiliário</div>
+    <div class="center-sub">Jogo de Propriedades — Santos / SP</div>
+    <div class="dice-row">
+      <div class="die">
+        <svg viewBox="0 0 40 40" width="10mm" height="10mm">
+          <circle cx="13" cy="13" r="3.5" fill="#2c3e50"/>
+          <circle cx="27" cy="27" r="3.5" fill="#2c3e50"/>
+        </svg>
+      </div>
+      <div class="die">
+        <svg viewBox="0 0 40 40" width="10mm" height="10mm">
+          <circle cx="13" cy="13" r="3.5" fill="#2c3e50"/>
+          <circle cx="20" cy="20" r="3.5" fill="#2c3e50"/>
+          <circle cx="27" cy="27" r="3.5" fill="#2c3e50"/>
+        </svg>
+      </div>
+    </div>
+    <div class="center-info">
+      Capital inicial: <strong>R$ 15.000</strong> &nbsp;|&nbsp; Salário: <strong>R$ 2.000</strong><br>
+      Aluguel dobra com grupo completo (sem casas)<br>
+      Máx. 32 casas e 12 hotéis no banco
+    </div>
+  </div>
+
+  <!-- ═══════════ BOTTOM ROW (cells 0–10, col 11→1) ═══════════ -->
+
+  <!-- 0: Start (corner bottom-right) -->
+  <div class="cell corner c-start" style="grid-row:11;grid-column:11">
+    <div class="ci">
+      <div class="cico">→</div>
+      <div class="ctitle" style="color:#1a7a30">PONTO DE<br>PARTIDA</div>
+      <div class="csub">Receba R$ 2.000<br>ao passar aqui</div>
+    </div>
+  </div>
+
+  <!-- 1: Morro do Jabaquara (purple) -->
+  <div class="cell bot" style="grid-row:11;grid-column:10">
+    <div class="ci">
+      <div class="cb" style="background:#9b59b6"></div>
+      <div class="cn">Morro do Jabaquara</div>
+      <div class="cr">Aluguel R$50 · Hotel R$5.500</div>
+      <div class="cp">R$ 600</div>
+    </div>
+  </div>
+
+  <!-- 2: Sorte/Revés -->
+  <div class="cell chest bot" style="grid-row:11;grid-column:9">
+    <div class="ci">
+      <div class="chest-ico">🎲</div>
+      <div class="cn">Sorte / Revés</div>
+    </div>
+  </div>
+
+  <!-- 3: Morro da Nova Cintra (purple) -->
+  <div class="cell bot" style="grid-row:11;grid-column:8">
+    <div class="ci">
+      <div class="cb" style="background:#9b59b6"></div>
+      <div class="cn">Morro da Nova Cintra</div>
+      <div class="cr">Aluguel R$50 · Hotel R$5.500</div>
+      <div class="cp">R$ 600</div>
+    </div>
+  </div>
+
+  <!-- 4: Imposto Predial -->
+  <div class="cell tax bot" style="grid-row:11;grid-column:7">
+    <div class="ci">
+      <div class="tax-ico">💰</div>
+      <div class="cn">Imposto Predial</div>
+      <div class="cp">R$ 2.000</div>
+    </div>
+  </div>
+
+  <!-- 5: Terminal Valongo (station) -->
+  <div class="cell station bot" style="grid-row:11;grid-column:6">
+    <div class="ci">
+      <div class="cb" style="background:#95a5a6"></div>
+      <div class="cn">Terminal Valongo</div>
+      <div class="cr">1:R$250 · 2:R$500 · 3:R$1.000 · 4:R$2.000</div>
+      <div class="cp">R$ 2.000</div>
+    </div>
+  </div>
+
+  <!-- 6: Areia Branca (light-blue) -->
+  <div class="cell bot" style="grid-row:11;grid-column:5">
+    <div class="ci">
+      <div class="cb" style="background:#3498db"></div>
+      <div class="cn">Areia Branca</div>
+      <div class="cr">Aluguel R$100 · Hotel R$7.500</div>
+      <div class="cp">R$ 1.000</div>
+    </div>
+  </div>
+
+  <!-- 7: Sorte/Revés -->
+  <div class="cell chest bot" style="grid-row:11;grid-column:4">
+    <div class="ci">
+      <div class="chest-ico">🎲</div>
+      <div class="cn">Sorte / Revés</div>
+    </div>
+  </div>
+
+  <!-- 8: Castelo (light-blue) -->
+  <div class="cell bot" style="grid-row:11;grid-column:3">
+    <div class="ci">
+      <div class="cb" style="background:#3498db"></div>
+      <div class="cn">Castelo</div>
+      <div class="cr">Aluguel R$100 · Hotel R$7.500</div>
+      <div class="cp">R$ 1.000</div>
+    </div>
+  </div>
+
+  <!-- 9: Bom Retiro (light-blue) -->
+  <div class="cell bot" style="grid-row:11;grid-column:2">
+    <div class="ci">
+      <div class="cb" style="background:#3498db"></div>
+      <div class="cn">Bom Retiro</div>
+      <div class="cr">Aluguel R$120 · Hotel R$9.000</div>
+      <div class="cp">R$ 1.200</div>
+    </div>
+  </div>
+
+  <!-- 10: Jail (corner bottom-left) -->
+  <div class="cell corner c-jail" style="grid-row:11;grid-column:1">
+    <div class="ci">
+      <div class="cico">🔒</div>
+      <div class="ctitle">PRISÃO /<br>VISITA</div>
+      <div class="csub">3 turnos ou<br>pague R$ 500</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ LEFT COLUMN (cells 11–19, row 10→2) ═══════════ -->
+
+  <!-- 11: Macuco (pink) -->
+  <div class="cell lft" style="grid-row:10;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#e84393"></div>
+      <div class="cn">Macuco</div>
+      <div class="cr">R$150 · Hotel R$9.500</div>
+      <div class="cp">R$ 1.400</div>
+    </div>
+  </div>
+
+  <!-- 12: Balsa Santos-Guarujá (station) -->
+  <div class="cell station lft" style="grid-row:9;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#95a5a6"></div>
+      <div class="cn">Balsa Santos-Guarujá</div>
+      <div class="cr">1:R$50 · 2:R$100</div>
+      <div class="cp">R$ 1.500</div>
+    </div>
+  </div>
+
+  <!-- 13: Estuário (pink) -->
+  <div class="cell lft" style="grid-row:8;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#e84393"></div>
+      <div class="cn">Estuário</div>
+      <div class="cr">R$150 · Hotel R$9.500</div>
+      <div class="cp">R$ 1.400</div>
+    </div>
+  </div>
+
+  <!-- 14: Encruzilhada (pink) -->
+  <div class="cell lft" style="grid-row:7;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#e84393"></div>
+      <div class="cn">Encruzilhada</div>
+      <div class="cr">R$180 · Hotel R$10.000</div>
+      <div class="cp">R$ 1.600</div>
+    </div>
+  </div>
+
+  <!-- 15: VLT Estação Ana Costa (station) -->
+  <div class="cell station lft" style="grid-row:6;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#95a5a6"></div>
+      <div class="cn">VLT Est. Ana Costa</div>
+      <div class="cr">1:R$250 · 2:R$500 · 3:R$1.000 · 4:R$2.000</div>
+      <div class="cp">R$ 2.000</div>
+    </div>
+  </div>
+
+  <!-- 16: Marapé (orange) -->
+  <div class="cell lft" style="grid-row:5;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#e67e22"></div>
+      <div class="cn">Marapé</div>
+      <div class="cr">R$200 · Hotel R$10.500</div>
+      <div class="cp">R$ 1.800</div>
+    </div>
+  </div>
+
+  <!-- 17: Sorte/Revés -->
+  <div class="cell chest lft" style="grid-row:4;grid-column:1">
+    <div class="ci">
+      <div class="chest-ico">🎲</div>
+      <div class="cn">Sorte / Revés</div>
+    </div>
+  </div>
+
+  <!-- 18: Campo Grande (orange) -->
+  <div class="cell lft" style="grid-row:3;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#e67e22"></div>
+      <div class="cn">Campo Grande</div>
+      <div class="cr">R$200 · Hotel R$10.500</div>
+      <div class="cp">R$ 1.800</div>
+    </div>
+  </div>
+
+  <!-- 19: Vila Belmiro (orange) -->
+  <div class="cell lft" style="grid-row:2;grid-column:1">
+    <div class="ci">
+      <div class="cb" style="background:#e67e22"></div>
+      <div class="cn">Vila Belmiro</div>
+      <div class="cr">R$220 · Hotel R$11.000</div>
+      <div class="cp">R$ 2.000</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TOP ROW (cells 20–30, col 1→11) ═══════════ -->
+
+  <!-- 20: Parking (corner top-left) -->
+  <div class="cell corner c-park" style="grid-row:1;grid-column:1">
+    <div class="ci">
+      <div class="cico">⚓</div>
+      <div class="ctitle">EMISSÁRIO<br>SUBMARINO</div>
+      <div class="csub">Estacionamento<br>Gratuito</div>
+    </div>
+  </div>
+
+  <!-- 21: Vila Mathias (red) -->
+  <div class="cell top" style="grid-row:1;grid-column:2">
+    <div class="ci">
+      <div class="cb" style="background:#e74c3c"></div>
+      <div class="cn">Vila Mathias</div>
+      <div class="cr">Aluguel R$250 · Hotel R$11.500</div>
+      <div class="cp">R$ 2.200</div>
+    </div>
+  </div>
+
+  <!-- 22: Sorte/Revés -->
+  <div class="cell chest top" style="grid-row:1;grid-column:3">
+    <div class="ci">
+      <div class="chest-ico">🎲</div>
+      <div class="cn">Sorte / Revés</div>
+    </div>
+  </div>
+
+  <!-- 23: José Menino (red) -->
+  <div class="cell top" style="grid-row:1;grid-column:4">
+    <div class="ci">
+      <div class="cb" style="background:#e74c3c"></div>
+      <div class="cn">José Menino</div>
+      <div class="cr">Aluguel R$250 · Hotel R$11.500</div>
+      <div class="cp">R$ 2.200</div>
+    </div>
+  </div>
+
+  <!-- 24: Pompeia (red) -->
+  <div class="cell top" style="grid-row:1;grid-column:5">
+    <div class="ci">
+      <div class="cb" style="background:#e74c3c"></div>
+      <div class="cn">Pompeia</div>
+      <div class="cr">Aluguel R$280 · Hotel R$12.000</div>
+      <div class="cp">R$ 2.400</div>
+    </div>
+  </div>
+
+  <!-- 25: Rodoviária de Santos (station) -->
+  <div class="cell station top" style="grid-row:1;grid-column:6">
+    <div class="ci">
+      <div class="cb" style="background:#95a5a6"></div>
+      <div class="cn">Rodoviária de Santos</div>
+      <div class="cr">1:R$250 · 2:R$500 · 3:R$1.000 · 4:R$2.000</div>
+      <div class="cp">R$ 2.000</div>
+    </div>
+  </div>
+
+  <!-- 26: Aparecida (yellow) -->
+  <div class="cell top" style="grid-row:1;grid-column:7">
+    <div class="ci">
+      <div class="cb" style="background:#f1c40f"></div>
+      <div class="cn">Aparecida</div>
+      <div class="cr">Aluguel R$300 · Hotel R$12.750</div>
+      <div class="cp">R$ 2.600</div>
+    </div>
+  </div>
+
+  <!-- 27: Embaré (yellow) -->
+  <div class="cell top" style="grid-row:1;grid-column:8">
+    <div class="ci">
+      <div class="cb" style="background:#f1c40f"></div>
+      <div class="cn">Embaré</div>
+      <div class="cr">Aluguel R$300 · Hotel R$12.750</div>
+      <div class="cp">R$ 2.600</div>
+    </div>
+  </div>
+
+  <!-- 28: Companhia Docas CODESP (station) -->
+  <div class="cell station top" style="grid-row:1;grid-column:9">
+    <div class="ci">
+      <div class="cb" style="background:#95a5a6"></div>
+      <div class="cn">Cia. Docas (CODESP)</div>
+      <div class="cr">1:R$50 · 2:R$100</div>
+      <div class="cp">R$ 1.500</div>
+    </div>
+  </div>
+
+  <!-- 29: Ponta da Praia (yellow) -->
+  <div class="cell top" style="grid-row:1;grid-column:10">
+    <div class="ci">
+      <div class="cb" style="background:#f1c40f"></div>
+      <div class="cn">Ponta da Praia</div>
+      <div class="cr">Aluguel R$320 · Hotel R$13.500</div>
+      <div class="cp">R$ 2.800</div>
+    </div>
+  </div>
+
+  <!-- 30: Go-Jail (corner top-right) -->
+  <div class="cell corner c-gojail" style="grid-row:1;grid-column:11">
+    <div class="ci">
+      <div class="cico">↙</div>
+      <div class="ctitle">VÁ PARA<br>A PRISÃO</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ RIGHT COLUMN (cells 31–39, row 2→10) ═══════════ -->
+
+  <!-- 31: Boqueirão (green) -->
+  <div class="cell rgt" style="grid-row:2;grid-column:11">
+    <div class="ci">
+      <div class="cb" style="background:#27ae60"></div>
+      <div class="cn">Boqueirão</div>
+      <div class="cr">R$350 · Hotel R$14.000</div>
+      <div class="cp">R$ 3.000</div>
+    </div>
+  </div>
+
+  <!-- 32: Canal 3 (green) -->
+  <div class="cell rgt" style="grid-row:3;grid-column:11">
+    <div class="ci">
+      <div class="cb" style="background:#27ae60"></div>
+      <div class="cn">Canal 3</div>
+      <div class="cr">R$350 · Hotel R$14.000</div>
+      <div class="cp">R$ 3.000</div>
+    </div>
+  </div>
+
+  <!-- 33: Sorte/Revés -->
+  <div class="cell chest rgt" style="grid-row:4;grid-column:11">
+    <div class="ci">
+      <div class="chest-ico">🎲</div>
+      <div class="cn">Sorte / Revés</div>
+    </div>
+  </div>
+
+  <!-- 34: Canal 4 (green) -->
+  <div class="cell rgt" style="grid-row:5;grid-column:11">
+    <div class="ci">
+      <div class="cb" style="background:#27ae60"></div>
+      <div class="cn">Canal 4</div>
+      <div class="cr">R$400 · Hotel R$15.000</div>
+      <div class="cp">R$ 3.200</div>
+    </div>
+  </div>
+
+  <!-- 35: Porto de Santos (station) -->
+  <div class="cell station rgt" style="grid-row:6;grid-column:11">
+    <div class="ci">
+      <div class="cb" style="background:#95a5a6"></div>
+      <div class="cn">Porto de Santos</div>
+      <div class="cr">1:R$250 · 2:R$500 · 3:R$1.000 · 4:R$2.000</div>
+      <div class="cp">R$ 2.000</div>
+    </div>
+  </div>
+
+  <!-- 36: Sorte/Revés -->
+  <div class="cell chest rgt" style="grid-row:7;grid-column:11">
+    <div class="ci">
+      <div class="chest-ico">🎲</div>
+      <div class="cn">Sorte / Revés</div>
+    </div>
+  </div>
+
+  <!-- 37: Gonzaga (dark-blue) -->
+  <div class="cell rgt" style="grid-row:8;grid-column:11">
+    <div class="ci">
+      <div class="cb" style="background:#2980b9"></div>
+      <div class="cn">Gonzaga</div>
+      <div class="cr">R$450 · Hotel R$17.000</div>
+      <div class="cp">R$ 3.500</div>
+    </div>
+  </div>
+
+  <!-- 38: Contribuição de Iluminação (tax) -->
+  <div class="cell tax rgt" style="grid-row:9;grid-column:11">
+    <div class="ci">
+      <div class="tax-ico">💡</div>
+      <div class="cn">Contrib. de Iluminação</div>
+      <div class="cp">R$ 1.000</div>
+    </div>
+  </div>
+
+  <!-- 39: Av. Ana Costa (dark-blue) -->
+  <div class="cell rgt" style="grid-row:10;grid-column:11">
+    <div class="ci">
+      <div class="cb" style="background:#2980b9"></div>
+      <div class="cn">Av. Ana Costa</div>
+      <div class="cr">R$500 · Hotel R$18.500</div>
+      <div class="cp">R$ 4.000</div>
+    </div>
+  </div>
+
+</div><!-- /.board -->
+
+
+<!-- ═══════════ LEGEND ═══════════ -->
+<div class="legend">
+  <div class="legend-title">Tabela de Preços e Aluguéis</div>
+  <div class="legend-grid">
+
+    <div class="lg">
+      <div class="lg-h" style="background:#9b59b6">Roxo — Casa: R$500 · Hotel: R$500</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Morro do Jabaquara</td><td>R$600</td></tr>
+          <tr><td>Morro da Nova Cintra</td><td>R$600</td></tr>
+          <tr class="rent-row"><td colspan="2">Aluguel R$50 · 1c R$250 · 2c R$750 · 3c R$2.250 · 4c R$4.000 · Hotel R$5.500</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="lg">
+      <div class="lg-h" style="background:#3498db">Azul Claro — Casa: R$500 · Hotel: R$500</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Areia Branca</td><td>R$1.000</td></tr>
+          <tr><td>Castelo</td><td>R$1.000</td></tr>
+          <tr><td>Bom Retiro</td><td>R$1.200</td></tr>
+          <tr class="rent-row"><td colspan="2">R$100 · 1c R$500 · 2c R$1.500 · 3c R$4.500 · 4c R$6.250 · Hotel R$7.500</td></tr>
+          <tr class="rent-row"><td colspan="2">Bom Retiro: R$120 · Hotel R$9.000</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="lg">
+      <div class="lg-h" style="background:#e84393">Rosa — Casa: R$1.000 · Hotel: R$1.000</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Macuco</td><td>R$1.400</td></tr>
+          <tr><td>Estuário</td><td>R$1.400</td></tr>
+          <tr><td>Encruzilhada</td><td>R$1.600</td></tr>
+          <tr class="rent-row"><td colspan="2">R$150 · 1c R$700 · 2c R$2.000 · 3c R$5.500 · 4c R$7.500 · Hotel R$9.500</td></tr>
+          <tr class="rent-row"><td colspan="2">Encruzilhada: R$180 · Hotel R$10.000</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="lg">
+      <div class="lg-h" style="background:#d35400">Laranja — Casa: R$1.000 · Hotel: R$1.000</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Marapé</td><td>R$1.800</td></tr>
+          <tr><td>Campo Grande</td><td>R$1.800</td></tr>
+          <tr><td>Vila Belmiro</td><td>R$2.000</td></tr>
+          <tr class="rent-row"><td colspan="2">R$200 · 1c R$900 · 2c R$2.500 · 3c R$7.000 · 4c R$8.750 · Hotel R$10.500</td></tr>
+          <tr class="rent-row"><td colspan="2">Vila Belmiro: R$220 · Hotel R$11.000</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="lg">
+      <div class="lg-h" style="background:#c0392b">Vermelho — Casa: R$1.500 · Hotel: R$1.500</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Vila Mathias</td><td>R$2.200</td></tr>
+          <tr><td>José Menino</td><td>R$2.200</td></tr>
+          <tr><td>Pompeia</td><td>R$2.400</td></tr>
+          <tr class="rent-row"><td colspan="2">R$250 · 1c R$1.100 · 2c R$3.300 · 3c R$8.000 · 4c R$9.750 · Hotel R$11.500</td></tr>
+          <tr class="rent-row"><td colspan="2">Pompeia: R$280 · Hotel R$12.000</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="lg">
+      <div class="lg-h" style="background:#b7950b">Amarelo — Casa: R$1.500 · Hotel: R$1.500</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Aparecida</td><td>R$2.600</td></tr>
+          <tr><td>Embaré</td><td>R$2.600</td></tr>
+          <tr><td>Ponta da Praia</td><td>R$2.800</td></tr>
+          <tr class="rent-row"><td colspan="2">R$300 · 1c R$1.300 · 2c R$3.900 · 3c R$9.000 · 4c R$11.000 · Hotel R$12.750</td></tr>
+          <tr class="rent-row"><td colspan="2">Ponta da Praia: R$320 · Hotel R$13.500</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="lg">
+      <div class="lg-h" style="background:#1e8449">Verde — Casa: R$2.000 · Hotel: R$2.000</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Boqueirão</td><td>R$3.000</td></tr>
+          <tr><td>Canal 3</td><td>R$3.000</td></tr>
+          <tr><td>Canal 4</td><td>R$3.200</td></tr>
+          <tr class="rent-row"><td colspan="2">R$350 · 1c R$1.500 · 2c R$4.500 · 3c R$10.000 · 4c R$12.000 · Hotel R$14.000</td></tr>
+          <tr class="rent-row"><td colspan="2">Canal 4: R$400 · Hotel R$15.000</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="lg">
+      <div class="lg-h" style="background:#1a5276">Azul Escuro — Casa: R$2.000 · Hotel: R$2.000</div>
+      <div class="lg-b">
+        <table>
+          <tr><td>Gonzaga</td><td>R$3.500</td></tr>
+          <tr><td>Av. Ana Costa</td><td>R$4.000</td></tr>
+          <tr class="rent-row"><td colspan="2">Gonzaga: R$450 · 1c R$2.000 · 2c R$6.000 · 3c R$12.000 · 4c R$14.500 · Hotel R$17.000</td></tr>
+          <tr class="rent-row"><td colspan="2">Av. Ana Costa: R$500 · 1c R$2.500 · 2c R$7.500 · 3c R$13.500 · 4c R$15.500 · Hotel R$18.500</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /.legend-grid -->
+
+  <div class="legend-rules">
+    <div class="rule-box">
+      <strong>💰 Capital e Regras Gerais</strong>
+      Capital inicial: R$ 15.000<br>
+      Salário ao passar no início: R$ 2.000<br>
+      Hipoteca: metade do valor de compra<br>
+      Grupo completo sem casas: aluguel dobrado
+    </div>
+    <div class="rule-box">
+      <strong>🚉 Estações de Transporte</strong>
+      Terminal Valongo, VLT Ana Costa,<br>
+      Rodoviária de Santos, Porto de Santos:<br>
+      1 estação R$250 · 2 R$500 · 3 R$1.000 · 4 R$2.000<br>
+      Balsa + Cia. Docas: 1 R$50 · 2 R$100
+    </div>
+    <div class="rule-box">
+      <strong>🔒 Prisão</strong>
+      Fica 3 turnos OU paga R$ 500<br>
+      OU usa carta "Saia da Prisão"<br>
+      3 pares de dados seguidos = preso<br>
+      Imposto Predial: R$2.000 · Iluminação: R$1.000
+    </div>
+  </div>
+</div><!-- /.legend -->
+
+</body>
+</html>

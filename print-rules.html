@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Santos Imobiliário — Regras do Jogo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bangers&display=swap');
+
+@page { size: A4 portrait; margin: 14mm 14mm 14mm 14mm; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --yellow:   #ffd43b;
+  --yellow-d: #f0a500;
+  --black:    #1a1a1a;
+  --white:    #ffffff;
+  --purple:   #9b59b6;
+  --blue-l:   #3498db;
+  --pink:     #e84393;
+  --orange:   #e67e22;
+  --red:      #e74c3c;
+  --yellow-g: #f1c40f;
+  --green:    #27ae60;
+  --blue-d:   #2980b9;
+  --gray:     #95a5a6;
+  --ink:      #2c3e50;
+  --rule-bg:  #fffdf0;
+}
+
+body {
+  font-family: 'Fredoka One', 'Arial Rounded MT Bold', Arial, sans-serif;
+  color: var(--ink);
+  background: white;
+  font-size: 9pt;
+  line-height: 1.55;
+}
+
+/* ── Page breaks ── */
+.page {
+  break-before: page;
+  page-break-before: page;
+}
+.page:first-of-type {
+  break-before: avoid;
+  page-break-before: avoid;
+}
+
+/* ── Never split these elements across pages ── */
+.rule-block,
+.callout,
+.space-card,
+.space-grid,
+.cols2,
+.cols3,
+.steps,
+.bullets,
+.cover-components,
+.ref-table,
+.legend-rules,
+.stat-row {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* ── Keep headings glued to the content that follows ── */
+.section-h,
+.sub-h {
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* ── Cover page ── */
+.cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 267mm;
+  padding: 10mm 0;
+}
+
+.cover-hero {
+  background: var(--yellow);
+  border: 4px solid var(--black);
+  border-radius: 6mm;
+  width: 100%;
+  padding: 10mm 8mm 8mm;
+  text-align: center;
+  box-shadow: 5px 5px 0 var(--black);
+  margin-bottom: 8mm;
+}
+
+.cover-hero h1 {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 46pt;
+  letter-spacing: 5px;
+  line-height: 1;
+  color: var(--black);
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+}
+
+.cover-hero .subtitle {
+  font-size: 10pt;
+  color: #5a4000;
+  margin-top: 2mm;
+  letter-spacing: 1px;
+}
+
+.cover-badges {
+  display: flex;
+  gap: 5mm;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 6mm;
+}
+
+.badge {
+  background: white;
+  border: 2.5px solid var(--black);
+  border-radius: 3mm;
+  padding: 2mm 4mm;
+  font-size: 7.5pt;
+  font-weight: bold;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.cover-components {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4mm;
+}
+
+.component-box {
+  background: var(--rule-bg);
+  border: 2px solid var(--black);
+  border-radius: 3mm;
+  padding: 3mm 4mm;
+  text-align: center;
+}
+
+.component-box .ico { font-size: 16pt; line-height: 1; margin-bottom: 1mm; }
+.component-box .qty { font-family: 'Bangers', sans-serif; font-size: 11pt; color: var(--black); }
+.component-box .lbl { font-size: 6.5pt; color: #555; line-height: 1.3; }
+
+.cover-footer {
+  width: 100%;
+  text-align: center;
+  font-size: 7pt;
+  color: #888;
+  font-style: italic;
+  margin-top: 6mm;
+  border-top: 1px solid #ddd;
+  padding-top: 3mm;
+}
+
+/* ── Section headers ── */
+.section-h {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 16pt;
+  letter-spacing: 2px;
+  background: var(--yellow);
+  border: 3px solid var(--black);
+  border-radius: 3mm;
+  padding: 2mm 5mm;
+  margin-bottom: 5mm;
+  box-shadow: 3px 3px 0 var(--black);
+  display: flex;
+  align-items: center;
+  gap: 2mm;
+}
+
+.sub-h {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 11pt;
+  letter-spacing: 1px;
+  color: var(--black);
+  border-bottom: 2.5px solid var(--black);
+  padding-bottom: 1mm;
+  margin: 5mm 0 3mm;
+  display: flex;
+  align-items: center;
+  gap: 1.5mm;
+}
+
+/* ── Columns ── */
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+.cols3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; }
+
+/* ── Rule blocks ── */
+.rule-block {
+  background: var(--rule-bg);
+  border: 2px solid var(--black);
+  border-radius: 3mm;
+  padding: 3mm 4mm;
+  margin-bottom: 3mm;
+}
+
+.rule-block p { margin-bottom: 1.5mm; font-size: 8.5pt; }
+.rule-block p:last-child { margin-bottom: 0; }
+.rule-block strong { color: var(--black); }
+
+/* ── Callout boxes ── */
+.callout {
+  border-left: 5px solid var(--black);
+  padding: 2.5mm 4mm;
+  margin: 3mm 0;
+  font-size: 8.5pt;
+  border-radius: 0 3mm 3mm 0;
+}
+.callout.yellow { background: #fff9e0; border-color: var(--yellow-d); }
+.callout.red    { background: #fff0f0; border-color: var(--red); }
+.callout.green  { background: #f0fff4; border-color: var(--green); }
+.callout.blue   { background: #f0f7ff; border-color: var(--blue-d); }
+
+/* ── Step list ── */
+.steps { counter-reset: step; list-style: none; padding: 0; }
+.steps li {
+  counter-increment: step;
+  display: flex;
+  gap: 3mm;
+  align-items: flex-start;
+  margin-bottom: 2.5mm;
+  font-size: 8.5pt;
+}
+.steps li::before {
+  content: counter(step);
+  font-family: 'Bangers', sans-serif;
+  font-size: 10pt;
+  background: var(--black);
+  color: white;
+  width: 5mm;
+  height: 5mm;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.3mm;
+}
+
+/* ── Bullet list ── */
+.bullets { list-style: none; padding: 0; }
+.bullets li {
+  display: flex;
+  gap: 2mm;
+  align-items: flex-start;
+  margin-bottom: 2mm;
+  font-size: 8.5pt;
+}
+.bullets li::before {
+  content: '▸';
+  color: var(--black);
+  font-size: 8pt;
+  flex-shrink: 0;
+  margin-top: 0.5mm;
+}
+
+/* ── Quick ref table ── */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  margin-bottom: 4mm;
+}
+.ref-table th {
+  background: var(--black);
+  color: white;
+  font-family: 'Bangers', sans-serif;
+  font-size: 9pt;
+  letter-spacing: 1px;
+  padding: 2mm 3mm;
+  text-align: left;
+}
+.ref-table td {
+  padding: 2mm 3mm;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+.ref-table tr:nth-child(even) td { background: #f9f9f9; }
+.ref-table tr:last-child td { border-bottom: none; }
+
+/* ── Color group chips ── */
+.group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  border: 1.5px solid rgba(0,0,0,0.3);
+  border-radius: 2mm;
+  padding: 0.8mm 2mm;
+  font-size: 7pt;
+  font-weight: bold;
+  margin: 1mm;
+  white-space: nowrap;
+}
+.color-dot {
+  width: 3.5mm;
+  height: 3.5mm;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.25);
+  flex-shrink: 0;
+}
+
+/* ── Special space cells ── */
+.space-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5mm;
+}
+
+.space-card {
+  border: 2px solid var(--black);
+  border-radius: 2.5mm;
+  overflow: hidden;
+  font-size: 7.5pt;
+}
+.space-card .sp-header {
+  background: var(--black);
+  color: white;
+  padding: 1.5mm 3mm;
+  font-family: 'Bangers', sans-serif;
+  font-size: 8pt;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 1.5mm;
+}
+.space-card .sp-body {
+  padding: 2mm 3mm;
+  background: var(--rule-bg);
+  line-height: 1.5;
+}
+
+/* ── Stat pill ── */
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5mm 0;
+  border-bottom: 1px dotted #ccc;
+  font-size: 8.5pt;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-val {
+  font-family: 'Bangers', sans-serif;
+  font-size: 10pt;
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     CAPA
+══════════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div style="width:100%">
+    <div class="cover-hero">
+      <h1>Santos<br>Imobiliário</h1>
+      <div class="subtitle">Jogo de Propriedades com Temática Santista</div>
+      <div class="cover-badges">
+        <div class="badge">👥 2 a 6 jogadores</div>
+        <div class="badge">⏱️ 60 – 180 minutos</div>
+        <div class="badge">🔞 A partir de 8 anos</div>
+      </div>
+    </div>
+
+    <div class="sub-h">📦 Componentes</div>
+    <div class="cover-components">
+      <div class="component-box">
+        <div class="ico">🗺️</div>
+        <div class="qty">1</div>
+        <div class="lbl">Tabuleiro com 40 casas temáticas de Santos</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">🎲</div>
+        <div class="qty">2</div>
+        <div class="lbl">Dados de 6 faces</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">🎭</div>
+        <div class="qty">6</div>
+        <div class="lbl">Peças de jogadores (cores distintas)</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">📋</div>
+        <div class="qty">28</div>
+        <div class="lbl">Títulos de posse de propriedades</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">🚉</div>
+        <div class="qty">6</div>
+        <div class="lbl">Títulos de estações de transporte</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">🎲</div>
+        <div class="qty">20</div>
+        <div class="lbl">Cartas Sorte / Revés</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">🏠</div>
+        <div class="qty">32</div>
+        <div class="lbl">Casas verdes</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">🏨</div>
+        <div class="qty">12</div>
+        <div class="lbl">Hotéis vermelhos</div>
+      </div>
+      <div class="component-box">
+        <div class="ico">💵</div>
+        <div class="qty">∞</div>
+        <div class="lbl">Notas do Banco Santos (7 valores)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    Santos Imobiliário · Jogo não oficial baseado em Monopoly · Temática: Santos/SP
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     PÁGINA 2 — PREPARAÇÃO E TURNO
+══════════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="section-h">⚙️ Preparação do Jogo</div>
+
+  <div class="cols2">
+    <div>
+      <div class="sub-h">🏦 Banco e Capital Inicial</div>
+      <div class="rule-block">
+        <div class="stat-row"><span>Capital inicial por jogador</span><span class="stat-val">R$ 15.000</span></div>
+        <div class="stat-row"><span>Salário ao passar pelo início</span><span class="stat-val">R$ 2.000</span></div>
+        <div class="stat-row"><span>Casas disponíveis no banco</span><span class="stat-val">32</span></div>
+        <div class="stat-row"><span>Hotéis disponíveis no banco</span><span class="stat-val">12</span></div>
+      </div>
+      <div class="callout yellow">
+        💡 <strong>Distribuição sugerida por jogador:</strong><br>
+        5 × R$1.000 · 4 × R$500 · 5 × R$100 · 5 × R$50 · 4 × R$10 · 5 × R$5 · 5 × R$1
+      </div>
+    </div>
+
+    <div>
+      <div class="sub-h">📐 Montagem</div>
+      <ol class="steps">
+        <li>Coloque o tabuleiro no centro da mesa.</li>
+        <li>Cada jogador escolhe uma peça e a posiciona no <strong>Ponto de Partida</strong>.</li>
+        <li>Distribua R$ 15.000 para cada jogador conforme sugestão acima.</li>
+        <li>Embaralhe as <strong>Cartas Sorte/Revés</strong> e coloque-as viradas para baixo nas casas correspondentes do tabuleiro.</li>
+        <li>Os <strong>Títulos de Posse</strong> ficam separados com o banco.</li>
+        <li>O jogador mais velho começa. O turno segue no sentido <strong>horário</strong>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="section-h" style="margin-top:5mm">🎲 O Turno do Jogador</div>
+
+  <ol class="steps">
+    <li><strong>Role os dois dados</strong> e mova sua peça o número de casas indicado no sentido horário.</li>
+    <li><strong>Aplique o efeito</strong> da casa em que parou (veja seção Casas Especiais).</li>
+    <li>Se você <strong>parar ou passar</strong> pelo Ponto de Partida, receba R$ 2.000 do banco.</li>
+    <li>Ao final do efeito, o <strong>turno passa</strong> para o próximo jogador no sentido horário.</li>
+  </ol>
+
+  <div class="callout green" style="margin-top:3mm">
+    🎯 <strong>Dobradinha (pares):</strong> Se os dois dados mostrarem o mesmo valor, você <strong>joga novamente</strong> após aplicar o efeito da casa. Três pares consecutivos no mesmo turno = <strong>vá para a Prisão</strong> imediatamente, sem jogar pela terceira vez.
+  </div>
+
+  <div class="sub-h" style="margin-top:4mm">🗺️ Casas Especiais do Tabuleiro</div>
+  <div class="space-grid">
+    <div class="space-card">
+      <div class="sp-header">→ Ponto de Partida (casa 0)</div>
+      <div class="sp-body">Receba <strong>R$ 2.000</strong> do banco sempre que <em>passar ou pousar</em> nesta casa. É o salário padrão.</div>
+    </div>
+    <div class="space-card">
+      <div class="sp-header">🎲 Sorte / Revés (casas 2, 7, 17, 22, 33, 36)</div>
+      <div class="sp-body">Compre a carta do topo do baralho e aplique seu efeito imediatamente. Depois devolva ao fundo do baralho.</div>
+    </div>
+    <div class="space-card">
+      <div class="sp-header">💰 Imposto Predial (casa 4)</div>
+      <div class="sp-body">Pague <strong>R$ 2.000</strong> ao banco. Obrigatório, sem negociação.</div>
+    </div>
+    <div class="space-card">
+      <div class="sp-header">💡 Contrib. de Iluminação (casa 38)</div>
+      <div class="sp-body">Pague <strong>R$ 1.000</strong> ao banco. Obrigatório, sem negociação.</div>
+    </div>
+    <div class="space-card">
+      <div class="sp-header">🔒 Prisão / Visita (casa 10)</div>
+      <div class="sp-body">Se estiver <em>visitando</em>: nenhum efeito. Se estiver <em>preso</em>: veja a seção Prisão abaixo.</div>
+    </div>
+    <div class="space-card">
+      <div class="sp-header">⚓ Emissário Submarino (casa 20)</div>
+      <div class="sp-body"><strong>Estacionamento Gratuito.</strong> Nenhum efeito — descanse e espere o próximo turno.</div>
+    </div>
+    <div class="space-card">
+      <div class="sp-header">🚨 Vá para a Prisão (casa 30)</div>
+      <div class="sp-body">Mova-se <em>diretamente</em> para a Prisão (casa 10). Não receba salário. Seu turno termina imediatamente.</div>
+    </div>
+    <div class="space-card">
+      <div class="sp-header">🚉 Estações de Transporte (casas 5, 12, 15, 25, 28, 35)</div>
+      <div class="sp-body">Podem ser compradas como propriedades. O aluguel aumenta com o número de estações que o dono possui.</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     PÁGINA 3 — PROPRIEDADES, CONSTRUÇÃO, HIPOTECA
+══════════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="section-h">🏘️ Propriedades</div>
+
+  <div class="cols2">
+    <div>
+      <div class="sub-h">🛒 Compra</div>
+      <ol class="steps">
+        <li>Pouse em uma propriedade <strong>sem dono</strong>.</li>
+        <li>Você pode comprá-la pelo preço indicado no tabuleiro.</li>
+        <li>Se comprar, receba o <strong>Título de Posse</strong> correspondente.</li>
+        <li>Se recusar, a propriedade vai a <strong>leilão</strong> (veja abaixo).</li>
+      </ol>
+      <div class="callout blue" style="margin-top:2mm">
+        🔨 <strong>Leilão:</strong> Qualquer jogador pode dar lances, incluindo quem recusou. O maior lance vence e paga o banco. Lance mínimo: R$ 1.
+      </div>
+    </div>
+    <div>
+      <div class="sub-h">💸 Aluguel</div>
+      <ol class="steps">
+        <li>Se pousar na propriedade de outro jogador, pague aluguel ao dono.</li>
+        <li>O valor está no <strong>Título de Posse</strong> conforme o nível de construção.</li>
+        <li>Aluguel <strong>não é cobrado</strong> se a propriedade estiver hipotecada ou o dono estiver preso.</li>
+        <li>O dono deve <strong>cobrar antes</strong> do próximo turno ser iniciado.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="sub-h">🎨 Grupos de Cor e Monopólio</div>
+  <div class="rule-block">
+    <p>Quando um jogador possui <strong>todas as propriedades de um grupo de cor</strong>, ele forma um <strong>monopólio</strong>.</p>
+    <p>Com monopólio e <strong>sem casas construídas</strong>, o aluguel básico é cobrado em <strong>dobro</strong>.</p>
+    <p>Com monopólio, o jogador pode começar a <strong>construir casas e hotéis</strong>.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;margin-bottom:4mm">
+    <div class="group-chip"><div class="color-dot" style="background:#9b59b6"></div>Roxo (2)</div>
+    <div class="group-chip"><div class="color-dot" style="background:#3498db"></div>Azul Claro (3)</div>
+    <div class="group-chip"><div class="color-dot" style="background:#e84393"></div>Rosa (3)</div>
+    <div class="group-chip"><div class="color-dot" style="background:#e67e22"></div>Laranja (3)</div>
+    <div class="group-chip"><div class="color-dot" style="background:#e74c3c"></div>Vermelho (3)</div>
+    <div class="group-chip"><div class="color-dot" style="background:#f1c40f;border-color:#ccc"></div>Amarelo (3)</div>
+    <div class="group-chip"><div class="color-dot" style="background:#27ae60"></div>Verde (3)</div>
+    <div class="group-chip"><div class="color-dot" style="background:#2980b9"></div>Azul Escuro (2)</div>
+  </div>
+
+  <div class="cols2">
+    <div>
+      <div class="sub-h">🏠 Construção de Casas e Hotéis</div>
+      <ol class="steps">
+        <li>É necessário ter o <strong>monopólio completo</strong> do grupo.</li>
+        <li>Pague ao banco o custo por casa (indicado no Título de Posse).</li>
+        <li>As casas devem ser construídas de forma <strong>equilibrada</strong>: nenhuma propriedade do grupo pode ter mais de 1 casa a mais que outra.</li>
+        <li>Ao atingir <strong>4 casas</strong> em todas as propriedades do grupo, você pode trocar todas por 1 <strong>Hotel</strong> pagando o valor de 1 casa.</li>
+        <li>Com hotel, as 4 casas retornam ao banco.</li>
+      </ol>
+      <div class="callout red">
+        ⚠️ <strong>Escassez:</strong> Se o banco não tiver casas/hotéis suficientes, nenhum jogador pode construir até que sejam devolvidas.
+      </div>
+    </div>
+    <div>
+      <div class="sub-h">🏦 Hipoteca</div>
+      <ol class="steps">
+        <li>Para levantar dinheiro, você pode hipotecar uma propriedade ao banco.</li>
+        <li>Receba o valor de <strong>hipoteca = metade do preço</strong> de compra.</li>
+        <li>Propriedades hipotecadas <strong>não cobram aluguel</strong>.</li>
+        <li>Para resgatar, pague o valor da hipoteca <strong>+ 10% de juro</strong>.</li>
+        <li>Antes de hipotecar, você <strong>deve vender</strong> todas as casas/hotéis do grupo (ao banco, pela metade do preço de construção).</li>
+      </ol>
+
+      <div class="sub-h" style="margin-top:4mm">🚉 Aluguel de Estações</div>
+      <table class="ref-table">
+        <tr><th>Estações do dono</th><th>Aluguel</th></tr>
+        <tr><td>1 estação*</td><td>R$ 250</td></tr>
+        <tr><td>2 estações*</td><td>R$ 500</td></tr>
+        <tr><td>3 estações*</td><td>R$ 1.000</td></tr>
+        <tr><td>4 estações*</td><td>R$ 2.000</td></tr>
+      </table>
+      <div style="font-size:6.5pt;color:#666">*Balsa Santos-Guarujá e Cia. Docas têm tabela própria: 1→R$50, 2→R$100.</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     PÁGINA 4 — PRISÃO, FALÊNCIA, VITÓRIA, REFERÊNCIA
+══════════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="section-h">🔒 Prisão</div>
+
+  <div class="cols2">
+    <div>
+      <div class="sub-h">Como ir para a Prisão</div>
+      <ul class="bullets">
+        <li>Pousar na casa <strong>"Vá para a Prisão"</strong> (casa 30).</li>
+        <li>Tirar <strong>3 pares consecutivos</strong> no mesmo turno.</li>
+        <li>Retirar uma <strong>carta Revés</strong> que manda para a Prisão.</li>
+      </ul>
+      <div class="callout red" style="margin-top:2mm">
+        🚨 Ao ir para a Prisão, mova-se diretamente para a casa 10. Não receba salário se passar pelo Ponto de Partida.
+      </div>
+    </div>
+    <div>
+      <div class="sub-h">Como sair da Prisão</div>
+      <ul class="bullets">
+        <li>Pague <strong>R$ 500</strong> ao banco e jogue normalmente.</li>
+        <li>Use uma <strong>carta "Saia da Prisão"</strong> (se possuir).</li>
+        <li>Tire uma <strong>dobradinha</strong> ao rolar os dados (sai grátis e move-se).</li>
+        <li>Após <strong>3 turnos preso sem sair</strong>, é obrigado a pagar R$ 500 e joga normalmente.</li>
+      </ul>
+      <div class="callout yellow" style="margin-top:2mm">
+        💡 Enquanto preso, você <strong>ainda pode comprar, vender e construir</strong> propriedades normalmente. Apenas o movimento é restrito. Aluguéis <strong>não são cobrados</strong> pelo jogador preso (mas são cobrados <em>de</em> você normalmente).
+      </div>
+    </div>
+  </div>
+
+  <div class="section-h" style="margin-top:5mm">💀 Falência e Vitória</div>
+
+  <div class="cols2">
+    <div>
+      <div class="sub-h">Declarando Falência</div>
+      <ul class="bullets">
+        <li>Se você <strong>não puder pagar uma dívida</strong> mesmo vendendo casas/hotéis e hipotecando tudo, está falido.</li>
+        <li>Suas propriedades vão para o <strong>credor</strong> (se dever a um jogador) ou voltam ao banco (se dever ao banco).</li>
+        <li>Você está <strong>eliminado</strong> do jogo.</li>
+      </ul>
+      <div class="callout red" style="margin-top:2mm">
+        ⚠️ Casas e hotéis em propriedades repassadas ao credor são <strong>devolvidos ao banco</strong> pelo valor de venda.
+      </div>
+    </div>
+    <div>
+      <div class="sub-h">Condição de Vitória</div>
+      <div class="rule-block">
+        <p>O jogo termina quando <strong>restar apenas um jogador</strong> sem ter falido.</p>
+        <p>Esse jogador é declarado o <strong>Magnata de Santos</strong> e vence a partida!</p>
+      </div>
+      <div class="callout green" style="margin-top:2mm">
+        🏆 <strong>Vitória por consenso:</strong> Se o grupo preferir terminar antes, o jogador com o <strong>maior patrimônio líquido</strong> (dinheiro + valor de propriedades + construções) vence.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-h" style="margin-top:5mm">📊 Referência Rápida</div>
+
+  <div class="cols2">
+    <div>
+      <table class="ref-table">
+        <tr><th colspan="2">Valores Fixos</th></tr>
+        <tr><td>Capital inicial</td><td><strong>R$ 15.000</strong></td></tr>
+        <tr><td>Salário (início)</td><td><strong>R$ 2.000</strong></td></tr>
+        <tr><td>Multa da Prisão</td><td><strong>R$ 500</strong></td></tr>
+        <tr><td>Imposto Predial</td><td><strong>R$ 2.000</strong></td></tr>
+        <tr><td>Contrib. Iluminação</td><td><strong>R$ 1.000</strong></td></tr>
+        <tr><td>Hipoteca</td><td><strong>50% do preço</strong></td></tr>
+        <tr><td>Deshipotecar</td><td><strong>55% do preço</strong></td></tr>
+        <tr><td>Vender casa/hotel</td><td><strong>50% do custo</strong></td></tr>
+        <tr><td>Casas no banco</td><td><strong>32</strong></td></tr>
+        <tr><td>Hotéis no banco</td><td><strong>12</strong></td></tr>
+        <tr><td>Máx. turnos preso</td><td><strong>3 turnos</strong></td></tr>
+        <tr><td>Pares para ir preso</td><td><strong>3 seguidos</strong></td></tr>
+      </table>
+    </div>
+    <div>
+      <table class="ref-table">
+        <tr><th colspan="2">Grupos de Cor — Custo de Casa</th></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#9b59b6;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Roxo</span></td><td><strong>R$ 500</strong></td></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#3498db;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Azul Claro</span></td><td><strong>R$ 500</strong></td></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#e84393;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Rosa</span></td><td><strong>R$ 1.000</strong></td></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#e67e22;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Laranja</span></td><td><strong>R$ 1.000</strong></td></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#e74c3c;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Vermelho</span></td><td><strong>R$ 1.500</strong></td></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#c9a800;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Amarelo</span></td><td><strong>R$ 1.500</strong></td></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#27ae60;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Verde</span></td><td><strong>R$ 2.000</strong></td></tr>
+        <tr><td><span class="group-chip" style="padding:0.5mm 1.5mm"><span class="color-dot" style="background:#2980b9;width:3mm;height:3mm;border-radius:50%;border:1px solid #ccc;display:inline-block"></span> Azul Escuro</span></td><td><strong>R$ 2.000</strong></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout blue" style="margin-top:4mm;font-size:7.5pt">
+    🎯 <strong>Dica de jogo:</strong> Grupos com 3 propriedades na faixa de preço média (Rosa, Laranja, Vermelho) costumam ter o melhor retorno sobre o investimento. Estações são ótimas no início — compre quantas puder!
+  </div>
+
+</div>
+
+</body>
+</html>

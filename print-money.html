@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Santos Imobiliário — Notas de Dinheiro</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bangers&display=swap');
+
+@page { size: A4 portrait; margin: 10mm; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Fredoka One', 'Arial Rounded MT Bold', Arial, sans-serif;
+  background: white;
+}
+
+/* ── Section per denomination ── */
+.denom-section { break-before: page; }
+.denom-section:first-of-type { break-before: avoid; }
+
+.denom-label {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 13pt;
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 5mm 0 4mm;
+  color: #2c3e50;
+}
+
+/* ── Bill grid: flex wrap, 2 cols — far more reliable for print ── */
+.bill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4mm;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+/* ── Bill ── */
+.bill {
+  width: 89mm;
+  height: 45mm;
+  border-radius: 3.5mm;
+  border: 2.5px solid transparent;
+  overflow: hidden;
+  break-inside: avoid;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+/* decorative guilloche inner border */
+.bill::before {
+  content: '';
+  position: absolute;
+  inset: 2.5mm;
+  border-radius: 2mm;
+  border: 1px solid rgba(255,255,255,0.28);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Lateral stripe (left/right) ── */
+.bill-stripe {
+  width: 12mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 3mm 1mm;
+  gap: 2mm;
+  background: rgba(0,0,0,0.12);
+}
+
+.bill-stripe-value {
+  font-family: 'Bangers', sans-serif;
+  font-size: 8.5pt;
+  writing-mode: vertical-lr;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.bill-stripe-dots {
+  font-size: 5pt;
+  opacity: 0.5;
+  writing-mode: vertical-lr;
+  letter-spacing: 3px;
+}
+
+/* ── Main center area ── */
+.bill-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3mm 2mm;
+}
+
+.bill-top-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bill-corner-num {
+  font-family: 'Bangers', sans-serif;
+  font-size: 8pt;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.bill-logo {
+  font-size: 4pt;
+  text-align: center;
+  opacity: 0.65;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.bill-center-block {
+  text-align: center;
+}
+
+.bill-currency {
+  font-size: 7pt;
+  letter-spacing: 1px;
+  opacity: 0.75;
+  margin-bottom: 0.5mm;
+}
+
+.bill-amount {
+  font-family: 'Bangers', sans-serif;
+  font-size: 26pt;
+  letter-spacing: 3px;
+  line-height: 1;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+}
+
+.bill-bottom-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.bill-serial {
+  font-size: 3.8pt;
+  opacity: 0.55;
+  letter-spacing: 0.5px;
+  font-style: italic;
+}
+
+.bill-city {
+  font-size: 4pt;
+  opacity: 0.6;
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+
+<script>
+// Denominations: value, background, text color, quantity per sheet
+const DENOMS = [
+  // qty: 8 per denomination = 2 cols × 4 rows — cabe com folga em A4 (10mm margins)
+  { value: 1000, bg: '#f1c40f', text: '#3d2e00', qty: 8 },
+  { value: 500,  bg: '#e74c3c', text: '#fff',    qty: 8 },
+  { value: 100,  bg: '#e67e22', text: '#fff',    qty: 8 },
+  { value: 50,   bg: '#8e44ad', text: '#fff',    qty: 8 },
+  { value: 10,   bg: '#2980b9', text: '#fff',    qty: 8 },
+  { value: 5,    bg: '#27ae60', text: '#fff',    qty: 8 },
+  { value: 1,    bg: '#95a5a6', text: '#1a252f', qty: 8 },
+];
+
+function fmt(n) {
+  return n.toLocaleString('pt-BR');
+}
+
+// serial number generator (decorative)
+function serial(i, value) {
+  const pad = String(i + 1).padStart(4, '0');
+  return `SI-${value}-${pad}`;
+}
+
+DENOMS.forEach((d, di) => {
+  const section = document.createElement('div');
+  section.className = 'denom-section';
+
+  const label = document.createElement('div');
+  label.className = 'denom-label';
+  label.textContent = `💵 R$ ${fmt(d.value)}`;
+  section.appendChild(label);
+
+  const grid = document.createElement('div');
+  grid.className = 'bill-grid';
+
+  // pick a slightly darker shade for the stripe
+  const stripeAlpha = 'rgba(0,0,0,0.12)';
+
+  for (let i = 0; i < d.qty; i++) {
+    const bill = document.createElement('div');
+    bill.className = 'bill';
+    bill.style.background = d.bg;
+    bill.style.color = d.text;
+    bill.style.borderColor = d.text === '#fff'
+      ? 'rgba(255,255,255,0.45)'
+      : 'rgba(0,0,0,0.4)';
+
+    bill.innerHTML = `
+      <div class="bill-stripe">
+        <div class="bill-stripe-value">${fmt(d.value)}</div>
+        <div class="bill-stripe-dots">· · · · ·</div>
+        <div class="bill-stripe-value">${fmt(d.value)}</div>
+      </div>
+
+      <div class="bill-main">
+        <div class="bill-top-row">
+          <div class="bill-corner-num">${fmt(d.value)}</div>
+          <div class="bill-logo">Santos<br>Imobiliário</div>
+          <div class="bill-corner-num">${fmt(d.value)}</div>
+        </div>
+
+        <div class="bill-center-block">
+          <div class="bill-currency">R E A I S</div>
+          <div class="bill-amount">${fmt(d.value)}</div>
+        </div>
+
+        <div class="bill-bottom-row">
+          <div class="bill-serial">${serial(i, d.value)}</div>
+          <div class="bill-city">Santos · SP</div>
+        </div>
+      </div>
+
+      <div class="bill-stripe">
+        <div class="bill-stripe-value">${fmt(d.value)}</div>
+        <div class="bill-stripe-dots">· · · · ·</div>
+        <div class="bill-stripe-value">${fmt(d.value)}</div>
+      </div>
+    `;
+
+    grid.appendChild(bill);
+  }
+
+  section.appendChild(grid);
+  document.body.appendChild(section);
+});
+</script>
+</body>
+</html>

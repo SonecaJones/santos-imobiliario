@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Santos Imobiliário — Cartas Sorte / Revés</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bangers&display=swap');
+
+@page { size: A4 portrait; margin: 10mm; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Fredoka One', 'Arial Rounded MT Bold', Arial, sans-serif;
+  background: white;
+}
+
+/* ── Explicit page wrappers (most reliable cross-browser) ── */
+.page-wrap {
+  break-before: page;
+  page-break-before: page;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.page-wrap:first-of-type {
+  break-before: avoid;
+  page-break-before: avoid;
+}
+
+h1.page-title {
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 16pt;
+  letter-spacing: 3px;
+  text-align: center;
+  padding: 6mm 0 5mm;
+  color: #2c3e50;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* Flex wrap is far more reliable than CSS Grid for print pagination */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5mm;
+  justify-content: center;
+  align-content: flex-start;
+}
+
+/* ── Card base ── */
+.card {
+  width: 58mm;
+  height: 87mm;
+  border-radius: 4mm;
+  border: 2px solid #000;
+  overflow: hidden;
+  break-inside: avoid;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 2px 0 #000;
+}
+
+/* ── Positive (SORTE) ── */
+.card.pos {
+  background: linear-gradient(160deg, #fffde7 0%, #fff9c4 40%, #fffde7 100%);
+}
+.card.pos .card-header {
+  background: linear-gradient(90deg, #f9a825, #fdd835);
+  color: #4e3200;
+  border-bottom: 2px solid #c77700;
+}
+.card.pos .card-value {
+  color: #1b5e20;
+  border-top: 2px solid #f9a825;
+}
+.card.pos .card-deco { color: #f9a825; }
+
+/* ── Negative (REVÉS) ── */
+.card.neg {
+  background: linear-gradient(160deg, #e3f2fd 0%, #bbdefb 40%, #e3f2fd 100%);
+}
+.card.neg .card-header {
+  background: linear-gradient(90deg, #1565c0, #1976d2);
+  color: white;
+  border-bottom: 2px solid #0d47a1;
+}
+.card.neg .card-value {
+  color: #b71c1c;
+  border-top: 2px solid #1565c0;
+}
+.card.neg .card-deco { color: #1976d2; }
+
+/* ── Layout sections ── */
+.card-header {
+  padding: 2.5mm 3mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.card-header-label {
+  font-family: 'Bangers', sans-serif;
+  font-size: 9pt;
+  letter-spacing: 1.5px;
+}
+.card-header-brand {
+  font-size: 4pt;
+  opacity: 0.7;
+  font-style: italic;
+  text-align: right;
+}
+
+.card-icon {
+  font-size: 22pt;
+  text-align: center;
+  padding: 3mm 0 1mm;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.card-deco {
+  text-align: center;
+  font-family: 'Bangers', sans-serif;
+  font-size: 7pt;
+  letter-spacing: 2px;
+  padding: 0 3mm 1mm;
+  flex-shrink: 0;
+}
+
+.card-text {
+  font-size: 5.8pt;
+  line-height: 1.55;
+  padding: 1.5mm 3mm;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  color: #1a1a1a;
+}
+
+.card-value {
+  font-family: 'Bangers', sans-serif;
+  font-size: 13pt;
+  text-align: center;
+  padding: 2mm 3mm;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.card-footer-strip {
+  background: rgba(0,0,0,0.06);
+  text-align: center;
+  font-size: 4pt;
+  padding: 1mm;
+  color: rgba(0,0,0,0.5);
+  font-style: italic;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<div id="cards-container"></div>
+
+<script>
+const LUCK_CARDS = [
+  { emoji:'🍀', title:'SORTE',  text:'Você encontrou uma nota perdida na areia do Gonzaga.',                                                 type:'money', value:50,   pos:true  },
+  { emoji:'⚓', title:'SORTE',  text:'O Porto de Santos bateu recorde de movimentação. Como acionista, receba dividendos.',                  type:'money', value:1000, pos:true  },
+  { emoji:'🚢', title:'REVÉS',  text:'A balsa Santos-Guarujá quebrou. Você perdeu o dia de trabalho.',                                       type:'money', value:200,  pos:false },
+  { emoji:'⚽', title:'SORTE',  text:'O Santos FC ganhou o clássico na Vila Belmiro! Você ganhou a aposta.',                                  type:'money', value:500,  pos:true  },
+  { emoji:'🚲', title:'REVÉS',  text:'Você foi multado por andar de bicicleta no calçadão fora da ciclovia.',                                 type:'money', value:150,  pos:false },
+  { emoji:'🍦', title:'SORTE',  text:'Dia de sol escaldante! Sua sorveteria no Canal 3 bombou.',                                              type:'money', value:800,  pos:true  },
+  { emoji:'🌧️',title:'REVÉS',  text:'Chuva torrencial e maré alta! Seu carro ficou ilhado na Av. Nossa Senhora de Fátima.',                  type:'money', value:600,  pos:false },
+  { emoji:'🎭', title:'SORTE',  text:'Você ganhou ingressos para o Teatro Coliseu. Economizou no lazer.',                                     type:'money', value:100,  pos:true  },
+  { emoji:'🚓', title:'REVÉS',  text:'Vá direto para a Prisão sem passar pelo Ponto de Partida. Não receba salário.',                         type:'jail',  value:null, pos:false },
+  { emoji:'🏗️', title:'SORTE', text:'A prefeitura revitalizou a área do seu imóvel no Valongo. Valorização imediata!',                       type:'money', value:1500, pos:true  },
+  { emoji:'📉', title:'REVÉS',  text:'Imposto predial aumentou acima da inflação. Pague ao banco.',                                           type:'money', value:400,  pos:false },
+  { emoji:'☕', title:'SORTE',  text:'Você herdou uma antiga corretora de café no Centro Histórico.',                                         type:'money', value:2000, pos:true  },
+  { emoji:'🍤', title:'REVÉS',  text:'Comer pastel com caldo de cana no Mercado Municipal te fez mal. Gastos com farmácia.',                  type:'money', value:100,  pos:false },
+  { emoji:'🏃', title:'SORTE',  text:'Você completou os 10 km da Tribuna! Patrocinadores te pagaram.',                                        type:'money', value:300,  pos:true  },
+  { emoji:'🛑', title:'REVÉS',  text:'Você avançou o sinal no cruzamento da Ana Costa. Multa aplicada.',                                     type:'money', value:250,  pos:false },
+  { emoji:'🌅', title:'SORTE',  text:'Sua foto do pôr do sol no Quebra-Mar viralizou. Ganhou prêmio de fotografia.',                          type:'money', value:400,  pos:true  },
+  { emoji:'🏨', title:'REVÉS',  text:'O prédio torto onde você tem um apartamento precisou de manutenção urgente.',                           type:'money', value:1000, pos:false },
+  { emoji:'🎉', title:'SORTE',  text:'É aniversário de Santos! A cidade está em festa e você ganhou um bônus.',                               type:'money', value:200,  pos:true  },
+  { emoji:'🏢', title:'REVÉS',  text:'Sua loja no Shopping Balneário precisou de reforma completa.',                                          type:'money', value:500,  pos:false },
+  { emoji:'🚶', title:'SORTE',  text:'Avance até o Ponto de Partida e receba o salário imediatamente.',                                       type:'start', value:2000, pos:true  },
+];
+
+function fmt(n) {
+  return 'R$\u00a0' + n.toLocaleString('pt-BR');
+}
+
+function valueLabel(card) {
+  if (card.type === 'money') return (card.pos ? '+ ' : '− ') + fmt(card.value);
+  if (card.type === 'jail')  return '🔒 Vá para a Prisão';
+  if (card.type === 'start') return '→ Início + ' + fmt(card.value);
+  return '';
+}
+
+const PER_PAGE = 9; // 3 cols × 3 rows
+const container = document.getElementById('cards-container');
+
+// Build all card elements first
+const cardEls = LUCK_CARDS.map(card => {
+  const div = document.createElement('div');
+  div.className = 'card ' + (card.pos ? 'pos' : 'neg');
+  div.innerHTML = `
+    <div class="card-header">
+      <div class="card-header-label">${card.emoji} ${card.title}</div>
+      <div class="card-header-brand">Santos<br>Imobiliário</div>
+    </div>
+    <div class="card-icon">${card.emoji}</div>
+    <div class="card-deco">· · · · · · · · · · · · · · · · ·</div>
+    <div class="card-text">${card.text}</div>
+    <div class="card-value">${valueLabel(card)}</div>
+    <div class="card-footer-strip">Santos Imobiliário — jogo de propriedades</div>
+  `;
+  return div;
+});
+
+// Group into explicit pages — each page-wrap forces a clean page break
+for (let i = 0; i < cardEls.length; i += PER_PAGE) {
+  const wrap = document.createElement('div');
+  wrap.className = 'page-wrap';
+
+  // Title only on first page
+  if (i === 0) {
+    const h1 = document.createElement('h1');
+    h1.className = 'page-title';
+    h1.textContent = '🎲 Cartas — Sorte / Revés';
+    wrap.appendChild(h1);
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  cardEls.slice(i, i + PER_PAGE).forEach(el => grid.appendChild(el));
+  wrap.appendChild(grid);
+  container.appendChild(wrap);
+}
+</script>
+</body>
+</html>
